@@ -21,7 +21,7 @@ import {
   ChatBubbleLeftIcon,
   UserIcon,
   Cog6ToothIcon,
-  PaperAirplaneIcon,
+  ArrowRightCircleIcon,
 } from "@heroicons/react/24/outline";
 
 // NOTE: This is a single-file React component meant to closely replicate the
@@ -50,19 +50,19 @@ export default function ChatGPTReplica() {
         <div className="absolute inset-0 bg-[radial-gradient(1200px_600px_at_70%_-10%,rgba(255,255,255,0.05),transparent_60%)]" />
 
         {/* Two-panel layout */}
-        <div className="relative mx-auto grid h-full max-w-[1400px] grid-cols-1 md:grid-cols-2">
+        <div className="relative h-full w-full grid grid-cols-1 md:grid-cols-2">
           {/* Left: Chat column */}
           <div className="relative flex h-full flex-col">
             {/* Chat content area */}
-            <div className="flex-1 flex items-center justify-center px-8">
-              <div className="w-full max-w-[640px]">
+            <div className="flex-1 flex items-center justify-center">
+              <div className="w-full">
                 {/* Chat messages would go here */}
               </div>
             </div>
             
-            {/* Bottom composer */}
-            <div className="px-8 pb-8">
-              <div className="mx-auto max-w-[640px]">
+            {/* Bottom composer - centered */}
+            <div className="flex items-center justify-center pb-8">
+              <div className="w-full max-w-[720px] px-4">
                 <div className="flex items-center gap-2">
                   {/* Composer */}
                   <div className="flex w-full items-center gap-3 rounded-full border border-white/10 bg-white/[0.03] px-4 py-3 shadow-sm">
@@ -71,11 +71,11 @@ export default function ChatGPTReplica() {
                     </button>
                     <input
                       className="w-full bg-transparent text-[15px] text-zinc-200 placeholder:text-zinc-400/70 focus:outline-none"
-                      placeholder="Write or code"
+                      placeholder="Ask or Make changes"
                     />
                     {/* Right actions */}
                     <button className="text-zinc-300/90 hover:text-zinc-200 transition-colors">
-                      <PaperAirplaneIcon className="h-5 w-5" />
+                      <ArrowRightCircleIcon className="h-5 w-5" />
                     </button>
                   </div>
                 </div>
@@ -86,7 +86,7 @@ export default function ChatGPTReplica() {
           {/* Right: Canvas column */}
           <div className="relative hidden h-full flex-col border-l border-white/10 md:flex">
             {/* Canvas header */}
-            <div className="flex items-center justify-between px-8 py-4 border-b border-white/5">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-white/5">
               <div className="flex items-center gap-2 text-zinc-200">
                 <XMarkIcon className="h-5 w-5" />
                 <div className="flex items-center gap-1 text-sm">
@@ -94,7 +94,7 @@ export default function ChatGPTReplica() {
                   <ChevronDownIcon className="h-4 w-4 opacity-80" />
                 </div>
               </div>
-              <div className="flex items-center gap-3 text-zinc-300/80">
+              <div className="flex items-center gap-3 text-zinc-300/80 ml-auto">
                 <button className="p-1 hover:text-zinc-200 transition-colors">
                   <ClockIcon className="h-5 w-5" />
                 </button>
@@ -117,12 +117,8 @@ export default function ChatGPTReplica() {
             </div>
 
             {/* Canvas body */}
-            <div className="flex-1 px-8 py-8">
-              <div className="mx-auto w-full max-w-[640px] h-full">
-                <div className="w-full h-full min-h-[400px] rounded-xl border border-white/10 bg-white/3 p-6 text-sm text-zinc-400/80">
-                  Canvas - Click to edit and create content...
-                </div>
-              </div>
+            <div className="flex-1">
+              {/* Empty canvas area */}
             </div>
           </div>
         </div>
