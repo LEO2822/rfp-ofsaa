@@ -149,6 +149,11 @@ const MarkdownCanvas = forwardRef<MarkdownCanvasRef, MarkdownCanvasProps>(
       if (debounceTimeoutRef.current) {
         clearTimeout(debounceTimeoutRef.current);
       }
+      
+      // Automatically switch to preview mode after adding text
+      setTimeout(() => {
+        setIsEditMode(false);
+      }, 800);
     }
   }, [selectedTextToAdd, history]);
 
