@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   ChevronDownIcon,
   DocumentTextIcon,
@@ -38,6 +38,10 @@ export default function ChatGPTReplica() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [showHelp, setShowHelp] = useState(false);
+  const [canvasName, setCanvasName] = useState("New");
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [tempName, setTempName] = useState("");
+  const nameInputRef = useRef<HTMLInputElement>(null);
 
   // Handle escape key to close help modal
   useEffect(() => {
@@ -58,6 +62,43 @@ export default function ChatGPTReplica() {
       document.body.style.overflow = 'unset';
     };
   }, [showHelp]);
+
+  // Focus input when editing starts
+  useEffect(() => {
+    if (isEditingName && nameInputRef.current) {
+      nameInputRef.current.focus();
+      nameInputRef.current.select();
+    }
+  }, [isEditingName]);
+
+  // Handle canvas name editing
+  const startEditing = () => {
+    setTempName(canvasName);
+    setIsEditingName(true);
+  };
+
+  const saveName = () => {
+    if (tempName.trim()) {
+      setCanvasName(tempName.trim());
+    }
+    setIsEditingName(false);
+    setTempName("");
+  };
+
+  const cancelEditing = () => {
+    setIsEditingName(false);
+    setTempName("");
+  };
+
+  const handleNameKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      saveName();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      cancelEditing();
+    }
+  };
 
   return (
     <div
@@ -264,7 +305,27 @@ export default function ChatGPTReplica() {
               }`}>
                 <XMarkIcon className="h-5 w-5" />
                 <div className="flex items-center gap-1 text-sm">
-                  <span className="opacity-90">New</span>
+                  {isEditingName ? (
+                    <input
+                      ref={nameInputRef}
+                      type="text"
+                      value={tempName}
+                      onChange={(e) => setTempName(e.target.value)}
+                      onKeyDown={handleNameKeyDown}
+                      onBlur={saveName}
+                      className={`bg-transparent border-none outline-none text-sm px-1 py-0.5 rounded ${
+                        isDarkMode ? 'text-zinc-200' : 'text-gray-700'
+                      }`}
+                      style={{ minWidth: '60px', maxWidth: '200px' }}
+                    />
+                  ) : (
+                    <span 
+                      className="opacity-90 cursor-pointer hover:opacity-100 transition-opacity px-1 py-0.5 rounded hover:bg-white/5"
+                      onClick={startEditing}
+                    >
+                      {canvasName}
+                    </span>
+                  )}
                   <ChevronDownIcon className="h-4 w-4 opacity-80" />
                 </div>
               </div>
