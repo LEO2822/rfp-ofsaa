@@ -28,6 +28,7 @@ import {
   QuestionMarkCircleIcon,
 } from "@heroicons/react/24/outline";
 import MarkdownCanvas from "@/components/MarkdownCanvas";
+import DocumentDisplay from "@/components/DocumentDisplay";
 
 // NOTE: This is a single-file React component meant to closely replicate the
 // provided screenshot, using Heroicons and Inter (Medium). Tailwind is used for
@@ -42,7 +43,11 @@ export default function ChatGPTReplica() {
   const [isEditingName, setIsEditingName] = useState(false);
   const [tempName, setTempName] = useState("");
   const [isCanvasMinimized, setIsCanvasMinimized] = useState(false);
+  const [documentContent, setDocumentContent] = useState("");
+  const [documentFilename, setDocumentFilename] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Handle escape key to close help modal
   useEffect(() => {
@@ -108,6 +113,41 @@ export default function ChatGPTReplica() {
 
   const restoreCanvas = () => {
     setIsCanvasMinimized(false);
+  };
+
+  // Handle file upload
+  const handleFileSelect = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('http://localhost:8000/upload-document', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Upload failed: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      setDocumentContent(result.content);
+      setDocumentFilename(result.filename);
+      
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      alert('Failed to upload and convert document. Please try again.');
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
@@ -220,7 +260,7 @@ export default function ChatGPTReplica() {
         )}
 
         {/* Top left controls */}
-        <div className="absolute top-4 left-4 z-10 flex gap-2">
+        <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
           {/* Theme toggle button */}
           <button
             onClick={() => setIsDarkMode(!isDarkMode)}
@@ -240,16 +280,44 @@ export default function ChatGPTReplica() {
           
           {/* Upload button */}
           <button
+            onClick={handleFileSelect}
+            disabled={isUploading}
             className={`px-3 py-2 rounded-lg transition-colors flex items-center gap-2 ${
               isDarkMode 
-                ? 'bg-white/10 hover:bg-white/20 text-zinc-200' 
-                : 'bg-amber-100 hover:bg-amber-200 text-amber-900'
+                ? 'bg-white/10 hover:bg-white/20 text-zinc-200 disabled:opacity-50' 
+                : 'bg-amber-100 hover:bg-amber-200 text-amber-900 disabled:opacity-50'
             }`}
             aria-label="Upload file"
           >
             <ArrowUpTrayIcon className="h-5 w-5" />
-            <span className="text-sm font-medium">Upload</span>
+            <span className="text-sm font-medium">
+              {isUploading ? 'Uploading...' : 'Upload'}
+            </span>
           </button>
+
+          {/* Filename display */}
+          {documentFilename && (
+            <div className={`px-3 py-2 rounded-lg text-sm font-medium ${
+              isDarkMode 
+                ? 'bg-white/5 text-zinc-300' 
+                : 'bg-gray-100 text-gray-700'
+            }`}>
+              <span className={`${
+                !isCanvasMinimized ? 'max-w-[200px] truncate block' : ''
+              }`}>
+                {documentFilename}
+              </span>
+            </div>
+          )}
+          
+          {/* Hidden file input */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".pdf,.doc,.docx,.txt,.md,.xls,.xlsx,.ppt,.pptx"
+            onChange={handleFileChange}
+            className="hidden"
+          />
         </div>
 
         {/* Two-panel layout */}
@@ -258,15 +326,16 @@ export default function ChatGPTReplica() {
           <div className={`relative flex h-full flex-col flex-shrink-0 ${
             isCanvasMinimized ? 'w-full' : 'w-full md:w-1/2'
           }`}>
-            {/* Chat content area */}
-            <div className="flex-1 flex items-center justify-center">
-              <div className="w-full">
-                {/* Chat messages would go here */}
-              </div>
+            {/* Document content area */}
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <DocumentDisplay 
+                isDarkMode={isDarkMode}
+                content={documentContent}
+              />
             </div>
             
             {/* Bottom composer - centered */}
-            <div className="flex items-center justify-center pb-8">
+            <div className="flex items-center justify-center pb-8 pt-4">
               <div className="w-full max-w-[720px] px-4">
                 <div className="flex items-center gap-2">
                   {/* Composer */}
@@ -306,12 +375,12 @@ export default function ChatGPTReplica() {
 
           {/* Right: Canvas column */}
           {!isCanvasMinimized && (
-            <div className={`relative hidden h-full flex-col border-l-2 md:flex w-full md:w-1/2 flex-shrink-0 ${
-              isDarkMode ? 'border-white/20' : 'border-gray-300'
+            <div className={`relative hidden h-full flex-col border-l md:flex w-full md:w-1/2 flex-shrink-0 ${
+              isDarkMode ? 'border-white/20' : 'border-gray-200'
             }`}>
             {/* Canvas header */}
-            <div className={`flex items-center justify-between px-6 py-4 border-b-2 ${
-              isDarkMode ? 'border-white/20' : 'border-gray-300'
+            <div className={`flex items-center justify-between px-6 py-4 border-b ${
+              isDarkMode ? 'border-white/20' : 'border-gray-200'
             }`}>
               <div className={`flex items-center gap-2 ${
                 isDarkMode ? 'text-zinc-200' : 'text-gray-700'
