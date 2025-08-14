@@ -51,52 +51,77 @@ export default function ChatGPTReplica() {
         
         @keyframes gradient-shift {
           0%, 100% {
-            transform: translate(0%, 0%) rotate(0deg);
+            transform: translate(0%, 0%) rotate(0deg) scale(1);
           }
           25% {
-            transform: translate(5%, -5%) rotate(1deg);
+            transform: translate(10%, -10%) rotate(90deg) scale(1.1);
           }
           50% {
-            transform: translate(-5%, 5%) rotate(-1deg);
+            transform: translate(-15%, 15%) rotate(180deg) scale(0.9);
           }
           75% {
-            transform: translate(10%, -10%) rotate(2deg);
+            transform: translate(20%, -5%) rotate(270deg) scale(1.05);
           }
         }
         
         @keyframes gradient-rotate {
           0% {
-            transform: rotate(0deg);
+            transform: rotate(0deg) scale(1);
+          }
+          50% {
+            transform: rotate(180deg) scale(1.2);
           }
           100% {
-            transform: rotate(360deg);
+            transform: rotate(360deg) scale(1);
           }
         }
         
         @keyframes gradient-pulse {
           0%, 100% {
-            opacity: 0.6;
+            opacity: 0.3;
+            transform: scale(1);
           }
           50% {
-            opacity: 1;
+            opacity: 0.8;
+            transform: scale(1.1);
+          }
+        }
+        
+        @keyframes gradient-flow {
+          0% {
+            transform: translateX(-100%) translateY(0%) rotate(0deg);
+          }
+          50% {
+            transform: translateX(100%) translateY(-50%) rotate(180deg);
+          }
+          100% {
+            transform: translateX(-100%) translateY(0%) rotate(360deg);
           }
         }
         
         .animated-gradient {
-          animation: gradient-shift 20s ease-in-out infinite;
+          animation: gradient-shift 25s ease-in-out infinite;
         }
         
         .animated-gradient-2 {
-          animation: gradient-shift 15s ease-in-out infinite reverse;
+          animation: gradient-shift 20s ease-in-out infinite reverse;
         }
         
         .animated-gradient-3 {
-          animation: gradient-rotate 25s linear infinite;
+          animation: gradient-rotate 30s ease-in-out infinite;
+        }
+        
+        .animated-gradient-4 {
+          animation: gradient-flow 35s ease-in-out infinite;
+        }
+        
+        .animated-gradient-5 {
+          animation: gradient-pulse 15s ease-in-out infinite;
         }
       `}</style>
 
       {/* App background */}
-      <div className={`relative h-screen w-full overflow-hidden ${isDarkMode ? 'bg-[#0B0B0D]' : 'bg-gray-50'}`}>
+      <div className={`relative h-screen w-full overflow-hidden ${isDarkMode ? 'bg-[#0B0B0D]' : 'bg-[#FFFAF5]'}`}>
         {/* Animated gradient backgrounds */}
         {isDarkMode ? (
           <>
@@ -109,10 +134,12 @@ export default function ChatGPTReplica() {
           </>
         ) : (
           <>
-            <div className="absolute inset-0 opacity-60">
-              <div className="animated-gradient absolute top-0 -left-1/4 h-[150%] w-[150%] bg-gradient-to-br from-blue-200 via-transparent to-purple-200 blur-3xl" />
-              <div className="animated-gradient-2 absolute -top-1/4 right-0 h-[150%] w-[150%] bg-gradient-to-bl from-pink-200 via-transparent to-yellow-200 blur-3xl" />
-              <div className="animated-gradient-3 absolute bottom-0 left-1/3 h-[120%] w-[120%] bg-gradient-to-tr from-green-200 via-transparent to-cyan-200 blur-3xl" />
+            <div className="absolute inset-0 opacity-35">
+              <div className="animated-gradient absolute top-0 -right-1/4 h-[140%] w-[140%] bg-gradient-to-bl from-rose-400/60 via-pink-300/40 to-transparent blur-3xl" />
+              <div className="animated-gradient-2 absolute -bottom-1/4 left-0 h-[140%] w-[140%] bg-gradient-to-tr from-amber-400/50 via-orange-300/30 to-transparent blur-3xl" />
+              <div className="animated-gradient-3 absolute top-1/4 left-1/4 h-[100%] w-[100%] bg-gradient-to-br from-emerald-400/40 via-teal-300/30 to-transparent blur-3xl" />
+              <div className="animated-gradient-4 absolute bottom-0 right-0 h-[120%] w-[120%] bg-gradient-to-tl from-violet-400/50 via-purple-300/30 to-transparent blur-3xl" />
+              <div className="animated-gradient-5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[80%] w-[80%] bg-gradient-to-r from-sky-400/30 via-transparent to-indigo-400/30 blur-3xl" />
             </div>
           </>
         )}
@@ -123,7 +150,7 @@ export default function ChatGPTReplica() {
           className={`absolute top-4 left-4 z-10 p-2 rounded-lg transition-colors ${
             isDarkMode 
               ? 'bg-white/10 hover:bg-white/20 text-zinc-200' 
-              : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+              : 'bg-amber-100 hover:bg-amber-200 text-amber-900'
           }`}
           aria-label="Toggle theme"
         >
@@ -153,7 +180,7 @@ export default function ChatGPTReplica() {
                   <div className={`flex w-full items-center gap-3 rounded-full border px-4 py-3 shadow-sm ${
                     isDarkMode 
                       ? 'border-white/10 bg-white/[0.03]' 
-                      : 'border-gray-300 bg-white'
+                      : 'border-amber-200/50 bg-[#FFF8F0]'
                   }`}>
                     <button className={`transition-colors ${
                       isDarkMode 
