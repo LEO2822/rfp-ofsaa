@@ -46,11 +46,75 @@ export default function ChatGPTReplica() {
       }}
     >
       {/* Import Inter 500 */}
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap');`}</style>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap');
+        
+        @keyframes gradient-shift {
+          0%, 100% {
+            transform: translate(0%, 0%) rotate(0deg);
+          }
+          25% {
+            transform: translate(5%, -5%) rotate(1deg);
+          }
+          50% {
+            transform: translate(-5%, 5%) rotate(-1deg);
+          }
+          75% {
+            transform: translate(10%, -10%) rotate(2deg);
+          }
+        }
+        
+        @keyframes gradient-rotate {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+        
+        @keyframes gradient-pulse {
+          0%, 100% {
+            opacity: 0.6;
+          }
+          50% {
+            opacity: 1;
+          }
+        }
+        
+        .animated-gradient {
+          animation: gradient-shift 20s ease-in-out infinite;
+        }
+        
+        .animated-gradient-2 {
+          animation: gradient-shift 15s ease-in-out infinite reverse;
+        }
+        
+        .animated-gradient-3 {
+          animation: gradient-rotate 25s linear infinite;
+        }
+      `}</style>
 
       {/* App background */}
-      <div className={`relative h-screen w-full ${isDarkMode ? 'bg-[#0B0B0D]' : 'bg-gray-50'}`}>
-        {isDarkMode && <div className="absolute inset-0 bg-[radial-gradient(1200px_600px_at_70%_-10%,rgba(255,255,255,0.05),transparent_60%)]" />}
+      <div className={`relative h-screen w-full overflow-hidden ${isDarkMode ? 'bg-[#0B0B0D]' : 'bg-gray-50'}`}>
+        {/* Animated gradient backgrounds */}
+        {isDarkMode ? (
+          <>
+            <div className="absolute inset-0 opacity-50">
+              <div className="animated-gradient absolute top-0 -left-1/4 h-[150%] w-[150%] bg-gradient-to-br from-purple-900/30 via-transparent to-blue-900/30 blur-3xl" />
+              <div className="animated-gradient-2 absolute -top-1/4 right-0 h-[150%] w-[150%] bg-gradient-to-bl from-pink-900/20 via-transparent to-indigo-900/20 blur-3xl" />
+              <div className="animated-gradient-3 absolute bottom-0 left-1/3 h-[120%] w-[120%] bg-gradient-to-tr from-cyan-900/20 via-transparent to-violet-900/20 blur-3xl" />
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="absolute inset-0 opacity-60">
+              <div className="animated-gradient absolute top-0 -left-1/4 h-[150%] w-[150%] bg-gradient-to-br from-blue-200 via-transparent to-purple-200 blur-3xl" />
+              <div className="animated-gradient-2 absolute -top-1/4 right-0 h-[150%] w-[150%] bg-gradient-to-bl from-pink-200 via-transparent to-yellow-200 blur-3xl" />
+              <div className="animated-gradient-3 absolute bottom-0 left-1/3 h-[120%] w-[120%] bg-gradient-to-tr from-green-200 via-transparent to-cyan-200 blur-3xl" />
+            </div>
+          </>
+        )}
 
         {/* Theme toggle button - top left corner */}
         <button
