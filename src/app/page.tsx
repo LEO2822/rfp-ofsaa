@@ -24,6 +24,7 @@ import {
   ArrowRightCircleIcon,
   SunIcon,
   MoonIcon,
+  ArrowUpTrayIcon,
 } from "@heroicons/react/24/outline";
 
 // NOTE: This is a single-file React component meant to closely replicate the
@@ -144,22 +145,38 @@ export default function ChatGPTReplica() {
           </>
         )}
 
-        {/* Theme toggle button - top left corner */}
-        <button
-          onClick={() => setIsDarkMode(!isDarkMode)}
-          className={`absolute top-4 left-4 z-10 p-2 rounded-lg transition-colors ${
-            isDarkMode 
-              ? 'bg-white/10 hover:bg-white/20 text-zinc-200' 
-              : 'bg-amber-100 hover:bg-amber-200 text-amber-900'
-          }`}
-          aria-label="Toggle theme"
-        >
-          {isDarkMode ? (
-            <SunIcon className="h-5 w-5" />
-          ) : (
-            <MoonIcon className="h-5 w-5" />
-          )}
-        </button>
+        {/* Top left controls */}
+        <div className="absolute top-4 left-4 z-10 flex gap-2">
+          {/* Theme toggle button */}
+          <button
+            onClick={() => setIsDarkMode(!isDarkMode)}
+            className={`p-2 rounded-lg transition-colors ${
+              isDarkMode 
+                ? 'bg-white/10 hover:bg-white/20 text-zinc-200' 
+                : 'bg-amber-100 hover:bg-amber-200 text-amber-900'
+            }`}
+            aria-label="Toggle theme"
+          >
+            {isDarkMode ? (
+              <SunIcon className="h-5 w-5" />
+            ) : (
+              <MoonIcon className="h-5 w-5" />
+            )}
+          </button>
+          
+          {/* Upload button */}
+          <button
+            className={`px-3 py-2 rounded-lg transition-colors flex items-center gap-2 ${
+              isDarkMode 
+                ? 'bg-white/10 hover:bg-white/20 text-zinc-200' 
+                : 'bg-amber-100 hover:bg-amber-200 text-amber-900'
+            }`}
+            aria-label="Upload file"
+          >
+            <ArrowUpTrayIcon className="h-5 w-5" />
+            <span className="text-sm font-medium">Upload</span>
+          </button>
+        </div>
 
         {/* Two-panel layout */}
         <div className="relative h-full w-full grid grid-cols-1 md:grid-cols-2">
