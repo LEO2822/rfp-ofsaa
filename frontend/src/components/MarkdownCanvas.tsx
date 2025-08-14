@@ -1,27 +1,59 @@
 "use client";
 
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useState, useRef, useCallback, useEffect, useImperativeHandle, forwardRef } from "react";
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize from "rehype-sanitize";
 import rehypeHighlight from "rehype-highlight";
+import { useHistory } from "@/hooks/useHistory";
 
 interface MarkdownCanvasProps {
   isDarkMode: boolean;
   selectedTextToAdd?: string;
+  onStateChange?: (canUndo: boolean, canRedo: boolean) => void;
 }
 
-export default function MarkdownCanvas({ isDarkMode, selectedTextToAdd }: MarkdownCanvasProps) {
-  const [markdown, setMarkdown] = useState<string>("");
+interface HistoryEntry {
+  value: string;
+  timestamp: number;
+  id: string;
+}
+
+export interface MarkdownCanvasRef {
+  undo: () => void;
+  redo: () => void;
+  canUndo: boolean;
+  canRedo: boolean;
+  getHistory: () => HistoryEntry[];
+  goToVersion: (index: number) => void;
+}
+
+const MarkdownCanvas = forwardRef<MarkdownCanvasRef, MarkdownCanvasProps>(
+  ({ isDarkMode, selectedTextToAdd, onStateChange }, ref) => {
+  const history = useHistory<string>("");
   const [isEditMode, setIsEditMode] = useState<boolean>(true);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
+  useImperativeHandle(ref, () => ({
+    undo: history.undo,
+    redo: history.redo,
+    canUndo: history.canUndo,
+    canRedo: history.canRedo,
+    getHistory: history.getHistory,
+    goToVersion: history.goToVersion
+  }));
+  
+  // Notify parent of state changes
+  useEffect(() => {
+    onStateChange?.(history.canUndo, history.canRedo);
+  }, [history.canUndo, history.canRedo, onStateChange]);
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value;
-    setMarkdown(text);
+    history.set(text);
     
     // Clear previous timeout
     if (debounceTimeoutRef.current) {
@@ -34,11 +66,11 @@ export default function MarkdownCanvas({ isDarkMode, selectedTextToAdd }: Markdo
         setIsEditMode(false);
       }, 1500);
     }
-  }, []);
+  }, [history]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     // Press Escape to preview immediately
-    if (e.key === 'Escape' && markdown.trim()) {
+    if (e.key === 'Escape' && history.value.trim()) {
       e.preventDefault();
       if (debounceTimeoutRef.current) {
         clearTimeout(debounceTimeoutRef.current);
@@ -46,7 +78,7 @@ export default function MarkdownCanvas({ isDarkMode, selectedTextToAdd }: Markdo
       setIsEditMode(false);
     }
     // Press Ctrl/Cmd + Enter to preview immediately (keep Tab for normal tab behavior)
-    else if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && markdown.trim()) {
+    else if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && history.value.trim()) {
       e.preventDefault();
       if (debounceTimeoutRef.current) {
         clearTimeout(debounceTimeoutRef.current);
@@ -54,12 +86,12 @@ export default function MarkdownCanvas({ isDarkMode, selectedTextToAdd }: Markdo
       setIsEditMode(false);
     }
     // Let Enter key work normally for new lines - don't prevent default
-  }, [markdown]);
+  }, [history.value]);
 
   const handlePaste = useCallback((e: React.ClipboardEvent<HTMLTextAreaElement>) => {
     const text = e.clipboardData.getData("text/plain");
     if (text && text.trim().length > 0) {
-      setMarkdown(text);
+      history.set(text);
       // Clear any pending timeout
       if (debounceTimeoutRef.current) {
         clearTimeout(debounceTimeoutRef.current);
@@ -69,7 +101,7 @@ export default function MarkdownCanvas({ isDarkMode, selectedTextToAdd }: Markdo
         setIsEditMode(false);
       }, 100);
     }
-  }, []);
+  }, [history]);
 
   const handleClick = useCallback(() => {
     // Switch to edit mode when clicked
@@ -97,22 +129,19 @@ export default function MarkdownCanvas({ isDarkMode, selectedTextToAdd }: Markdo
     if (selectedTextToAdd && selectedTextToAdd.trim()) {
       const textToAdd = selectedTextToAdd.trim();
       
-      setMarkdown(prevMarkdown => {
-        const separator = prevMarkdown.trim() ? '\n\n' : '';
-        const newContent = prevMarkdown + separator + textToAdd;
-        
-        // Focus the textarea after updating content
-        setTimeout(() => {
-          if (textareaRef.current) {
-            textareaRef.current.focus();
-            // Set cursor to end of text
-            const length = newContent.length;
-            textareaRef.current.setSelectionRange(length, length);
-          }
-        }, 100);
-        
-        return newContent;
-      });
+      const separator = history.value.trim() ? '\n\n' : '';
+      const newContent = history.value + separator + textToAdd;
+      history.set(newContent);
+      
+      // Focus the textarea after updating content
+      setTimeout(() => {
+        if (textareaRef.current) {
+          textareaRef.current.focus();
+          // Set cursor to end of text
+          const length = newContent.length;
+          textareaRef.current.setSelectionRange(length, length);
+        }
+      }, 100);
       
       setIsEditMode(true);
       
@@ -121,7 +150,7 @@ export default function MarkdownCanvas({ isDarkMode, selectedTextToAdd }: Markdo
         clearTimeout(debounceTimeoutRef.current);
       }
     }
-  }, [selectedTextToAdd]);
+  }, [selectedTextToAdd, history]);
 
   // Clean up timeout on unmount
   useEffect(() => {
@@ -132,7 +161,7 @@ export default function MarkdownCanvas({ isDarkMode, selectedTextToAdd }: Markdo
     };
   }, []);
 
-  if (!isEditMode && markdown.trim()) {
+  if (!isEditMode && history.value.trim()) {
     // Show rendered markdown
     return (
       <div
@@ -341,7 +370,7 @@ export default function MarkdownCanvas({ isDarkMode, selectedTextToAdd }: Markdo
             ),
           }}
           >
-            {markdown}
+            {history.value}
           </ReactMarkdown>
         </div>
       </div>
@@ -352,7 +381,7 @@ export default function MarkdownCanvas({ isDarkMode, selectedTextToAdd }: Markdo
   return (
     <textarea
       ref={textareaRef}
-      value={markdown}
+      value={history.value}
       onChange={handleChange}
       onKeyDown={handleKeyDown}
       onPaste={handlePaste}
@@ -373,4 +402,8 @@ export default function MarkdownCanvas({ isDarkMode, selectedTextToAdd }: Markdo
       }}
     />
   );
-}
+});
+
+MarkdownCanvas.displayName = 'MarkdownCanvas';
+
+export default MarkdownCanvas;
