@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import "github-markdown-css/github-markdown.css";
+import "highlight.js/styles/github.css";
 
 const inter = Inter({
   variable: "--font-inter",

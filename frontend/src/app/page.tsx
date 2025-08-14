@@ -26,6 +26,7 @@ import {
   MoonIcon,
   ArrowUpTrayIcon,
 } from "@heroicons/react/24/outline";
+import MarkdownCanvas from "@/components/MarkdownCanvas";
 
 // NOTE: This is a single-file React component meant to closely replicate the
 // provided screenshot, using Heroicons and Inter (Medium). Tailwind is used for
@@ -179,9 +180,9 @@ export default function ChatGPTReplica() {
         </div>
 
         {/* Two-panel layout */}
-        <div className="relative h-full w-full grid grid-cols-1 md:grid-cols-2">
+        <div className="relative h-full w-full flex flex-col md:flex-row">
           {/* Left: Chat column */}
-          <div className="relative flex h-full flex-col">
+          <div className="relative flex h-full flex-col w-full md:w-1/2 flex-shrink-0">
             {/* Chat content area */}
             <div className="flex-1 flex items-center justify-center">
               <div className="w-full">
@@ -229,7 +230,7 @@ export default function ChatGPTReplica() {
           </div>
 
           {/* Right: Canvas column */}
-          <div className={`relative hidden h-full flex-col border-l-2 md:flex ${
+          <div className={`relative hidden h-full flex-col border-l-2 md:flex w-full md:w-1/2 flex-shrink-0 ${
             isDarkMode ? 'border-white/20' : 'border-gray-300'
           }`}>
             {/* Canvas header */}
@@ -282,21 +283,8 @@ export default function ChatGPTReplica() {
             </div>
 
             {/* Canvas body */}
-            <div className="flex-1 p-6">
-              <textarea
-                className={`w-full h-full resize-none bg-transparent p-4 focus:outline-none ${
-                  isDarkMode 
-                    ? 'text-zinc-200 placeholder:text-zinc-400/30' 
-                    : 'text-gray-900 placeholder:text-gray-500/50'
-                }`}
-                placeholder="Start typing here..."
-                style={{
-                  fontFamily: "'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial",
-                  fontWeight: 400,
-                  fontSize: "15px",
-                  lineHeight: "1.6",
-                }}
-              />
+            <div className="flex-1 flex flex-col p-2 min-h-0 overflow-hidden">
+              <MarkdownCanvas isDarkMode={isDarkMode} />
             </div>
           </div>
         </div>
