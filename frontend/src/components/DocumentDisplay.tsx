@@ -7,14 +7,23 @@ import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize from "rehype-sanitize";
 import rehypeHighlight from "rehype-highlight";
+import TextSelectionToolbar from "./TextSelectionToolbar";
 
 interface DocumentDisplayProps {
   isDarkMode: boolean;
   content: string;
   isCanvasMinimized?: boolean;
+  onAskWrite?: (selectedText: string) => void;
+  onMoveToCanvas?: (selectedText: string) => void;
 }
 
-export default function DocumentDisplay({ isDarkMode, content, isCanvasMinimized = false }: DocumentDisplayProps) {
+export default function DocumentDisplay({ 
+  isDarkMode, 
+  content, 
+  isCanvasMinimized = false, 
+  onAskWrite, 
+  onMoveToCanvas 
+}: DocumentDisplayProps) {
   if (!content) {
     return (
       <div className="flex-1 flex flex-col h-full">
@@ -56,19 +65,24 @@ export default function DocumentDisplay({ isDarkMode, content, isCanvasMinimized
       <div className={`flex-1 overflow-y-auto overflow-x-hidden py-6 pb-4 ${
         isCanvasMinimized ? 'px-20' : 'px-6'
       }`}>
-        <div 
-          className="prose prose-sm max-w-none"
-          style={{ 
-            wordWrap: "break-word", 
-            overflowWrap: "break-word",
-            maxWidth: "100%",
-            fontFamily: "'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial",
-            fontWeight: 400,
-            fontSize: "15px",
-            lineHeight: "1.6",
-          }}
+        <TextSelectionToolbar
+          isDarkMode={isDarkMode}
+          onAskWrite={onAskWrite}
+          onMoveToCanvas={onMoveToCanvas}
         >
-          <ReactMarkdown
+          <div 
+            className="prose prose-sm max-w-none"
+            style={{ 
+              wordWrap: "break-word", 
+              overflowWrap: "break-word",
+              maxWidth: "100%",
+              fontFamily: "'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial",
+              fontWeight: 400,
+              fontSize: "15px",
+              lineHeight: "1.6",
+            }}
+          >
+            <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             rehypePlugins={[
               rehypeRaw,
@@ -254,7 +268,8 @@ export default function DocumentDisplay({ isDarkMode, content, isCanvasMinimized
           >
             {content}
           </ReactMarkdown>
-        </div>
+          </div>
+        </TextSelectionToolbar>
       </div>
     </div>
   );

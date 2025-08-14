@@ -152,6 +152,23 @@ export default function ChatGPTReplica() {
     setShowClearConfirm(false);
   };
 
+  // Handle text selection actions
+  const handleAskWrite = (selectedText: string) => {
+    console.log("Ask/write with selected text:", selectedText);
+    // TODO: Implement ask/write functionality
+    // This could populate the input field or trigger an AI request
+  };
+
+  const handleMoveToCanvas = (selectedText: string) => {
+    console.log("Move to canvas with selected text:", selectedText);
+    // Restore canvas if minimized and add selected text to canvas
+    if (isCanvasMinimized) {
+      setIsCanvasMinimized(false);
+    }
+    // TODO: Add selected text to the canvas content
+    // This could be implemented by passing text to MarkdownCanvas component
+  };
+
   return (
     <div
       className={`min-h-screen w-full ${isDarkMode ? 'text-white' : 'text-gray-900'} ${isDarkMode ? 'selection:bg-white/10' : 'selection:bg-gray-300'}`}
@@ -388,6 +405,8 @@ export default function ChatGPTReplica() {
                 isDarkMode={isDarkMode}
                 content={documentContent}
                 isCanvasMinimized={isCanvasMinimized}
+                onAskWrite={handleAskWrite}
+                onMoveToCanvas={handleMoveToCanvas}
               />
             </div>
             
