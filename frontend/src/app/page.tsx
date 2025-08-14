@@ -47,6 +47,7 @@ export default function ChatGPTReplica() {
   const [documentFilename, setDocumentFilename] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [showProgress, setShowProgress] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -130,6 +131,7 @@ export default function ChatGPTReplica() {
     if (!file) return;
 
     setIsUploading(true);
+    setShowProgress(true);
     try {
       const formData = new FormData();
       formData.append('file', file);
@@ -152,6 +154,7 @@ export default function ChatGPTReplica() {
       alert('Failed to upload and convert document. Please try again.');
     } finally {
       setIsUploading(false);
+      setShowProgress(false);
     }
   };
 
@@ -244,6 +247,44 @@ export default function ChatGPTReplica() {
         
         .animated-gradient-5 {
           animation: gradient-pulse 15s ease-in-out infinite;
+        }
+        
+        @keyframes squiggly-progress {
+          0% {
+            transform: translateX(-100%) scaleY(1);
+          }
+          25% {
+            transform: translateX(-50%) scaleY(1.2);
+          }
+          50% {
+            transform: translateX(0%) scaleY(0.8);
+          }
+          75% {
+            transform: translateX(50%) scaleY(1.2);
+          }
+          100% {
+            transform: translateX(100%) scaleY(1);
+          }
+        }
+        
+        @keyframes squiggly-wave {
+          0%, 100% {
+            clip-path: polygon(0% 50%, 5% 40%, 10% 60%, 15% 30%, 20% 70%, 25% 35%, 30% 65%, 35% 45%, 40% 55%, 45% 35%, 50% 65%, 55% 40%, 60% 60%, 65% 30%, 70% 70%, 75% 40%, 80% 60%, 85% 35%, 90% 65%, 95% 45%, 100% 55%);
+          }
+          33% {
+            clip-path: polygon(0% 60%, 5% 35%, 10% 65%, 15% 40%, 20% 60%, 25% 30%, 30% 70%, 35% 35%, 40% 65%, 45% 40%, 50% 60%, 55% 35%, 60% 65%, 65% 45%, 70% 55%, 75% 35%, 80% 65%, 85% 40%, 90% 60%, 95% 30%, 100% 70%);
+          }
+          66% {
+            clip-path: polygon(0% 45%, 5% 65%, 10% 35%, 15% 70%, 20% 30%, 25% 65%, 30% 40%, 35% 60%, 40% 30%, 45% 70%, 50% 35%, 55% 65%, 60% 40%, 65% 60%, 70% 35%, 75% 65%, 80% 45%, 85% 55%, 90% 35%, 95% 65%, 100% 40%);
+          }
+        }
+        
+        .squiggly-progress {
+          animation: squiggly-progress 2s ease-in-out infinite;
+        }
+        
+        .squiggly-wave {
+          animation: squiggly-wave 1.5s ease-in-out infinite;
         }
       `}</style>
 
@@ -507,6 +548,65 @@ export default function ChatGPTReplica() {
             </div>
           )}
         </div>
+
+        {/* Progress Modal */}
+        {showProgress && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-md"
+            style={{ backgroundColor: isDarkMode ? 'rgba(11, 11, 13, 0.8)' : 'rgba(255, 250, 245, 0.8)' }}
+          >
+            <div 
+              className={`relative w-full max-w-md flex flex-col rounded-2xl shadow-2xl backdrop-blur-xl ${
+                isDarkMode 
+                  ? 'bg-zinc-900/95 text-zinc-100 border border-white/20' 
+                  : 'bg-white/95 text-gray-900 border border-amber-200/50'
+              }`}
+            >
+              {/* Modal Header */}
+              <div className={`flex-shrink-0 flex items-center justify-center p-6 border-b backdrop-blur-sm ${
+                isDarkMode 
+                  ? 'border-white/20 bg-zinc-900/90' 
+                  : 'border-amber-200/50 bg-white/90'
+              }`}>
+                <h2 className="text-xl font-medium" style={{ fontWeight: 500 }}>
+                  Processing Document
+                </h2>
+              </div>
+
+              {/* Modal Content */}
+              <div className="flex-1 p-8 flex flex-col items-center" style={{ fontWeight: 500 }}>
+                <p className={`text-sm text-center mb-6 ${isDarkMode ? 'text-zinc-300' : 'text-gray-700'}`}>
+                  Converting your document to markdown format...
+                </p>
+                
+                {/* Squiggly Progress Bar */}
+                <div className="w-full max-w-xs">
+                  <div className={`h-2 rounded-full overflow-hidden ${
+                    isDarkMode ? 'bg-zinc-700' : 'bg-gray-200'
+                  }`}>
+                    <div className={`h-full rounded-full squiggly-wave ${
+                      isDarkMode 
+                        ? 'bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500' 
+                        : 'bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600'
+                    }`}>
+                      <div className={`h-full w-full squiggly-progress ${
+                        isDarkMode 
+                          ? 'bg-gradient-to-r from-transparent via-white/30 to-transparent' 
+                          : 'bg-gradient-to-r from-transparent via-white/50 to-transparent'
+                      }`}></div>
+                    </div>
+                  </div>
+                  
+                  {/* Progress Text */}
+                  <div className="mt-4 text-center">
+                    <span className={`text-xs ${isDarkMode ? 'text-zinc-400' : 'text-gray-500'}`}>
+                      Please wait...
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Clear Confirmation Modal */}
         {showClearConfirm && (
