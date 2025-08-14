@@ -37,12 +37,12 @@ import DocumentDisplay from "@/components/DocumentDisplay";
 
 export default function ChatGPTReplica() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [canvasName, setCanvasName] = useState("New");
   const [isEditingName, setIsEditingName] = useState(false);
   const [tempName, setTempName] = useState("");
-  const [isCanvasMinimized, setIsCanvasMinimized] = useState(false);
+  const [isCanvasMinimized, setIsCanvasMinimized] = useState(true);
   const [documentContent, setDocumentContent] = useState("");
   const [documentFilename, setDocumentFilename] = useState("");
   const [isUploading, setIsUploading] = useState(false);
