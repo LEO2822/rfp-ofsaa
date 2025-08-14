@@ -142,36 +142,39 @@ export default function TextSelectionToolbar({
       {showToolbar && (
         <div
           ref={toolbarRef}
-          className={`absolute z-50 flex items-center gap-2 px-3 py-2 rounded-lg shadow-xl border transition-all duration-200 ${
+          className={`absolute z-50 flex items-center gap-2 px-4 py-3 rounded-2xl shadow-2xl border-2 transition-all duration-200 backdrop-blur-xl ${
             isDarkMode 
               ? 'bg-zinc-900/95 border-white/20 shadow-black/50' 
-              : 'bg-white/95 border-gray-200 shadow-black/20'
+              : 'bg-white/95 border-amber-200/60 shadow-black/20'
           }`}
           style={{
             left: `${toolbarPosition.x}px`,
             top: `${toolbarPosition.y}px`,
-            transform: 'translateX(-50%)', // Center the toolbar horizontally
-            backdropFilter: 'blur(8px)',
+            transform: 'translateX(-50%)',
+            fontFamily: "'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial",
+            fontWeight: 500,
           }}
         >
           <button
             onClick={handleAskWrite}
-            className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
+            className={`px-4 py-2 text-sm rounded-lg transition-all duration-200 flex items-center gap-2 shadow-lg ${
               isDarkMode 
-                ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                : 'bg-blue-600 hover:bg-blue-700 text-white'
+                ? 'bg-white/10 hover:bg-white/20 text-zinc-200 border border-white/20 shadow-white/10' 
+                : 'bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-200/50 shadow-amber-200/30'
             }`}
+            style={{ fontWeight: 500 }}
           >
             Ask/write
           </button>
           
           <button
             onClick={handleMoveToCanvas}
-            className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
+            className={`px-4 py-2 text-sm rounded-lg transition-all duration-200 flex items-center gap-2 shadow-lg ${
               isDarkMode 
-                ? 'bg-green-600 hover:bg-green-700 text-white' 
-                : 'bg-green-600 hover:bg-green-700 text-white'
+                ? 'bg-white/10 hover:bg-white/20 text-zinc-200 border border-white/20 shadow-white/10' 
+                : 'bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-200/50 shadow-amber-200/30'
             }`}
+            style={{ fontWeight: 500 }}
           >
             Move to canvas
           </button>

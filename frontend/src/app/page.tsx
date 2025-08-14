@@ -35,6 +35,7 @@ export default function ChatGPTReplica() {
   const [isUploading, setIsUploading] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [showProgress, setShowProgress] = useState(false);
+  const [selectedTextReference, setSelectedTextReference] = useState<string>("");
   const nameInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -154,9 +155,7 @@ export default function ChatGPTReplica() {
 
   // Handle text selection actions
   const handleAskWrite = (selectedText: string) => {
-    console.log("Ask/write with selected text:", selectedText);
-    // TODO: Implement ask/write functionality
-    // This could populate the input field or trigger an AI request
+    setSelectedTextReference(selectedText);
   };
 
   const handleMoveToCanvas = (selectedText: string) => {
@@ -413,36 +412,68 @@ export default function ChatGPTReplica() {
             {/* Bottom composer - centered */}
             <div className="flex items-center justify-center pb-8 pt-8">
               <div className="w-full max-w-[720px] px-4">
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col gap-2">
+                  {/* Selected text reference */}
+                  {selectedTextReference && (
+                    <div className={`flex items-start gap-3 px-4 py-3 rounded-2xl border ${
+                      isDarkMode 
+                        ? 'border-white/10 bg-white/[0.03]' 
+                        : 'border-amber-200/50 bg-[#FFF8F0]'
+                    }`}>
+                      <div className={`mt-0.5 ${
+                        isDarkMode ? 'text-zinc-400' : 'text-gray-600'
+                      }`}>
+                        <ArrowUturnRightIcon className="h-4 w-4" />
+                      </div>
+                      <div className={`flex-1 text-sm ${
+                        isDarkMode ? 'text-zinc-300' : 'text-gray-700'
+                      }`}>
+&ldquo;{selectedTextReference}&rdquo;
+                      </div>
+                      <button
+                        onClick={() => setSelectedTextReference("")}
+                        className={`transition-colors p-1 rounded ${
+                          isDarkMode 
+                            ? 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5' 
+                            : 'text-gray-500 hover:text-gray-700 hover:bg-amber-100'
+                        }`}
+                      >
+                        <XMarkIcon className="h-4 w-4" />
+                      </button>
+                    </div>
+                  )}
+                  
                   {/* Composer */}
-                  <div className={`flex w-full items-center gap-3 rounded-full border px-4 py-3 ${
-                    isDarkMode 
-                      ? 'border-white/10 bg-white/[0.03]' 
-                      : 'border-amber-200/50 bg-[#FFF8F0]'
-                  }`}>
-                    <button className={`transition-colors ${
+                  <div className="flex items-center gap-2">
+                    <div className={`flex w-full items-center gap-3 rounded-full border px-4 py-3 ${
                       isDarkMode 
-                        ? 'text-zinc-300/90 hover:text-zinc-200' 
-                        : 'text-gray-600 hover:text-gray-800'
+                        ? 'border-white/10 bg-white/[0.03]' 
+                        : 'border-amber-200/50 bg-[#FFF8F0]'
                     }`}>
-                      <PlusIcon className="h-5 w-5" />
-                    </button>
-                    <input
-                      className={`w-full bg-transparent text-[15px] focus:outline-none ${
+                      <button className={`transition-colors ${
                         isDarkMode 
-                          ? 'text-zinc-200 placeholder:text-zinc-400/70' 
-                          : 'text-gray-900 placeholder:text-gray-500'
-                      }`}
-                      placeholder="Ask or Make changes"
-                    />
-                    {/* Right actions */}
-                    <button className={`transition-colors ${
-                      isDarkMode 
-                        ? 'text-zinc-300/90 hover:text-zinc-200' 
-                        : 'text-gray-600 hover:text-gray-800'
-                    }`}>
-                      <ArrowRightCircleIcon className="h-5 w-5" />
-                    </button>
+                          ? 'text-zinc-300/90 hover:text-zinc-200' 
+                          : 'text-gray-600 hover:text-gray-800'
+                      }`}>
+                        <PlusIcon className="h-5 w-5" />
+                      </button>
+                      <input
+                        className={`w-full bg-transparent text-[15px] focus:outline-none ${
+                          isDarkMode 
+                            ? 'text-zinc-200 placeholder:text-zinc-400/70' 
+                            : 'text-gray-900 placeholder:text-gray-500'
+                        }`}
+                        placeholder="Ask or Make changes"
+                      />
+                      {/* Right actions */}
+                      <button className={`transition-colors ${
+                        isDarkMode 
+                          ? 'text-zinc-300/90 hover:text-zinc-200' 
+                          : 'text-gray-600 hover:text-gray-800'
+                      }`}>
+                        <ArrowRightCircleIcon className="h-5 w-5" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
