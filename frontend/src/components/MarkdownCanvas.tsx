@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useCallback, useEffect } from "react";
+import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
@@ -143,14 +144,32 @@ export default function MarkdownCanvas({ isDarkMode }: MarkdownCanvasProps) {
                 {children}
               </a>
             ),
-            img: ({ src, alt, ...props }) => (
-              <img
-                src={src || ""}
-                alt={alt || ""}
-                className="max-w-full h-auto rounded-md"
-                {...props}
-              />
-            ),
+            img: ({ src, alt, ...props }) => {
+              if (!src) return null;
+              // Use Next.js Image for external URLs and regular img for data URLs/blobs
+              if (typeof src === 'string' && (src.startsWith('http') || src.startsWith('/'))) {
+                return (
+                  <Image
+                    src={src}
+                    alt={alt || ""}
+                    width={800}
+                    height={600}
+                    className="max-w-full h-auto rounded-md"
+                    style={{ width: 'auto', height: 'auto' }}
+                    unoptimized
+                  />
+                );
+              }
+              // Fallback to regular img for data URLs and other cases
+              return (
+                <img
+                  src={typeof src === 'string' ? src : ''}
+                  alt={alt || ""}
+                  className="max-w-full h-auto rounded-md"
+                  {...props}
+                />
+              );
+            },
             code: ({ className, children, ...props }) => {
               const isInline = !className;
               return isInline ? (

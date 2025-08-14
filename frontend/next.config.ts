@@ -1,7 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  eslint: {
+    ignoreDuringBuilds: false,
+  },
+  images: {
+    domains: [], // Add domains as needed
+    unoptimized: false,
+  },
 };
 
 export default nextConfig;

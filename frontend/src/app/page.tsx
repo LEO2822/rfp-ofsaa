@@ -3,24 +3,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   ChevronDownIcon,
-  DocumentTextIcon,
   XMarkIcon,
-  EllipsisHorizontalIcon,
   ArrowUturnLeftIcon,
   ArrowUturnRightIcon,
-  ArrowUpOnSquareIcon,
-  LinkIcon,
   ArrowDownTrayIcon,
-  ClipboardIcon,
-  HandThumbUpIcon,
-  HandThumbDownIcon,
-  SpeakerWaveIcon,
   PlusIcon,
-  Bars3Icon,
   ClockIcon,
-  ChatBubbleLeftIcon,
-  UserIcon,
-  Cog6ToothIcon,
   ArrowRightCircleIcon,
   SunIcon,
   MoonIcon,
@@ -36,7 +24,6 @@ import DocumentDisplay from "@/components/DocumentDisplay";
 // guaranteed, but spacing, colors, and hierarchy are tuned carefully to match.
 
 export default function ChatGPTReplica() {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [canvasName, setCanvasName] = useState("New");
