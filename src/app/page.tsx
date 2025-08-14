@@ -120,12 +120,12 @@ export default function ChatGPTReplica() {
           </div>
 
           {/* Right: Canvas column */}
-          <div className={`relative hidden h-full flex-col border-l md:flex ${
-            isDarkMode ? 'border-white/10' : 'border-gray-200'
+          <div className={`relative hidden h-full flex-col border-l-2 md:flex ${
+            isDarkMode ? 'border-white/20' : 'border-gray-300'
           }`}>
             {/* Canvas header */}
-            <div className={`flex items-center justify-between px-6 py-4 border-b ${
-              isDarkMode ? 'border-white/5' : 'border-gray-200'
+            <div className={`flex items-center justify-between px-6 py-4 border-b-2 ${
+              isDarkMode ? 'border-white/20' : 'border-gray-300'
             }`}>
               <div className={`flex items-center gap-2 ${
                 isDarkMode ? 'text-zinc-200' : 'text-gray-700'
