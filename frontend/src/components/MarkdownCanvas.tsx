@@ -10,9 +10,10 @@ import rehypeHighlight from "rehype-highlight";
 
 interface MarkdownCanvasProps {
   isDarkMode: boolean;
+  selectedTextToAdd?: string;
 }
 
-export default function MarkdownCanvas({ isDarkMode }: MarkdownCanvasProps) {
+export default function MarkdownCanvas({ isDarkMode, selectedTextToAdd }: MarkdownCanvasProps) {
   const [markdown, setMarkdown] = useState<string>("");
   const [isEditMode, setIsEditMode] = useState<boolean>(true);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -90,6 +91,37 @@ export default function MarkdownCanvas({ isDarkMode }: MarkdownCanvasProps) {
       textareaRef.current.focus();
     }
   }, [isEditMode]);
+
+  // Handle adding selected text to canvas
+  useEffect(() => {
+    if (selectedTextToAdd && selectedTextToAdd.trim()) {
+      const textToAdd = selectedTextToAdd.trim();
+      
+      setMarkdown(prevMarkdown => {
+        const separator = prevMarkdown.trim() ? '\n\n' : '';
+        const newContent = prevMarkdown + separator + textToAdd;
+        
+        // Focus the textarea after updating content
+        setTimeout(() => {
+          if (textareaRef.current) {
+            textareaRef.current.focus();
+            // Set cursor to end of text
+            const length = newContent.length;
+            textareaRef.current.setSelectionRange(length, length);
+          }
+        }, 100);
+        
+        return newContent;
+      });
+      
+      setIsEditMode(true);
+      
+      // Clear any pending timeout
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    }
+  }, [selectedTextToAdd]);
 
   // Clean up timeout on unmount
   useEffect(() => {

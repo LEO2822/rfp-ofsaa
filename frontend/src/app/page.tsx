@@ -36,6 +36,7 @@ export default function ChatGPTReplica() {
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [showProgress, setShowProgress] = useState(false);
   const [selectedTextReference, setSelectedTextReference] = useState<string>("");
+  const [textToMoveToCanvas, setTextToMoveToCanvas] = useState<string>("");
   const nameInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -159,14 +160,24 @@ export default function ChatGPTReplica() {
   };
 
   const handleMoveToCanvas = (selectedText: string) => {
-    console.log("Move to canvas with selected text:", selectedText);
-    // Restore canvas if minimized and add selected text to canvas
+    // Restore canvas if minimized
     if (isCanvasMinimized) {
       setIsCanvasMinimized(false);
     }
-    // TODO: Add selected text to the canvas content
-    // This could be implemented by passing text to MarkdownCanvas component
+    // Set text to be moved to canvas
+    setTextToMoveToCanvas(selectedText);
   };
+
+  // Clear textToMoveToCanvas after it's been processed
+  useEffect(() => {
+    if (textToMoveToCanvas) {
+      const timer = setTimeout(() => {
+        setTextToMoveToCanvas("");
+      }, 200); // Clear after a short delay to ensure MarkdownCanvas processes it
+      
+      return () => clearTimeout(timer);
+    }
+  }, [textToMoveToCanvas]);
 
   return (
     <div
@@ -572,7 +583,10 @@ export default function ChatGPTReplica() {
 
             {/* Canvas body */}
             <div className="flex-1 flex flex-col p-2 min-h-0 overflow-hidden">
-              <MarkdownCanvas isDarkMode={isDarkMode} />
+              <MarkdownCanvas 
+                isDarkMode={isDarkMode}
+                selectedTextToAdd={textToMoveToCanvas}
+              />
             </div>
           </div>
           )}
