@@ -425,10 +425,20 @@ export default function ChatGPTReplica() {
                       }`}>
                         <ArrowUturnRightIcon className="h-4 w-4" />
                       </div>
-                      <div className={`flex-1 text-sm ${
-                        isDarkMode ? 'text-zinc-300' : 'text-gray-700'
-                      }`}>
-&ldquo;{selectedTextReference}&rdquo;
+                      <div 
+                        className={`flex-1 text-sm ${
+                          isDarkMode ? 'text-zinc-300' : 'text-gray-700'
+                        }`}
+                        style={{
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          lineHeight: '1.4'
+                        }}
+                      >
+                        &ldquo;{selectedTextReference}&rdquo;
                       </div>
                       <button
                         onClick={() => setSelectedTextReference("")}
