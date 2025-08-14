@@ -1,26 +1,44 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
+import TurndownService from 'turndown';
 
 interface TextSelectionToolbarProps {
   isDarkMode: boolean;
   children: React.ReactNode;
   onAskWrite?: (selectedText: string) => void;
-  onMoveToCanvas?: (selectedText: string) => void;
+  onMoveToCanvas?: (selectedText: string, markdownText?: string) => void;
 }
 
 export default function TextSelectionToolbar({ 
   isDarkMode, 
-  children, 
+  children,
   onAskWrite, 
   onMoveToCanvas 
 }: TextSelectionToolbarProps) {
   const [selectedText, setSelectedText] = useState('');
+  const [selectedMarkdown, setSelectedMarkdown] = useState('');
   const [showToolbar, setShowToolbar] = useState(false);
   const [toolbarPosition, setToolbarPosition] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const toolbarRef = useRef<HTMLDivElement>(null);
   const delayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const turndownRef = useRef<TurndownService | null>(null);
+  
+  // Initialize Turndown service
+  useEffect(() => {
+    turndownRef.current = new TurndownService({
+      headingStyle: 'atx',
+      codeBlockStyle: 'fenced',
+      bulletListMarker: '-'
+    });
+    
+    // Add custom rules for better conversion
+    turndownRef.current.addRule('preserveLineBreaks', {
+      filter: 'br',
+      replacement: () => '  \n'
+    });
+  }, []);
 
   useEffect(() => {
     const handleSelectionChange = () => {
@@ -34,6 +52,7 @@ export default function TextSelectionToolbar({
       if (!selection || selection.rangeCount === 0) {
         setShowToolbar(false);
         setSelectedText('');
+        setSelectedMarkdown('');
         return;
       }
 
@@ -43,6 +62,7 @@ export default function TextSelectionToolbar({
       if (!text || text.length === 0) {
         setShowToolbar(false);
         setSelectedText('');
+        setSelectedMarkdown('');
         return;
       }
 
@@ -50,10 +70,29 @@ export default function TextSelectionToolbar({
       if (containerRef.current && !containerRef.current.contains(range.commonAncestorContainer)) {
         setShowToolbar(false);
         setSelectedText('');
+        setSelectedMarkdown('');
         return;
       }
 
       setSelectedText(text);
+      
+      // Extract HTML from selection and convert to Markdown
+      try {
+        const clonedSelection = range.cloneContents();
+        const div = document.createElement('div');
+        div.appendChild(clonedSelection);
+        
+        // Convert HTML to Markdown
+        if (turndownRef.current) {
+          const markdown = turndownRef.current.turndown(div.innerHTML);
+          setSelectedMarkdown(markdown);
+        } else {
+          setSelectedMarkdown(text);
+        }
+      } catch (error) {
+        console.error('Error converting selection to markdown:', error);
+        setSelectedMarkdown(text);
+      }
       
       // Calculate position for toolbar
       const rect = range.getBoundingClientRect();
@@ -84,6 +123,7 @@ export default function TextSelectionToolbar({
         if (!selection || selection.toString().trim().length === 0) {
           setShowToolbar(false);
           setSelectedText('');
+          setSelectedMarkdown('');
         }
       }
     };
@@ -117,6 +157,7 @@ export default function TextSelectionToolbar({
     }
     setShowToolbar(false);
     setSelectedText('');
+    setSelectedMarkdown('');
     window.getSelection()?.removeAllRanges();
   };
 
@@ -128,10 +169,12 @@ export default function TextSelectionToolbar({
     }
     
     if (onMoveToCanvas && selectedText) {
-      onMoveToCanvas(selectedText);
+      // Use the converted markdown or fall back to plain text
+      onMoveToCanvas(selectedText, selectedMarkdown || selectedText);
     }
     setShowToolbar(false);
     setSelectedText('');
+    setSelectedMarkdown('');
     window.getSelection()?.removeAllRanges();
   };
 

@@ -14,7 +14,7 @@ interface DocumentDisplayProps {
   content: string;
   isCanvasMinimized?: boolean;
   onAskWrite?: (selectedText: string) => void;
-  onMoveToCanvas?: (selectedText: string) => void;
+  onMoveToCanvas?: (selectedText: string, markdownText?: string) => void;
 }
 
 export default function DocumentDisplay({ 

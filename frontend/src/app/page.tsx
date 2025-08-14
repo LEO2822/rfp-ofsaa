@@ -189,13 +189,13 @@ export default function ChatGPTReplica() {
     setSelectedTextReference(selectedText);
   };
 
-  const handleMoveToCanvas = (selectedText: string) => {
+  const handleMoveToCanvas = (selectedText: string, markdownText?: string) => {
     // Restore canvas if minimized
     if (isCanvasMinimized) {
       setIsCanvasMinimized(false);
     }
-    // Set text to be moved to canvas
-    setTextToMoveToCanvas(selectedText);
+    // Set text to be moved to canvas - use markdown if available, otherwise use plain text
+    setTextToMoveToCanvas(markdownText || selectedText);
   };
 
   // Clear textToMoveToCanvas after it's been processed
