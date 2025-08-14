@@ -263,42 +263,56 @@ export default function ChatGPTReplica() {
           animation: gradient-pulse 15s ease-in-out infinite;
         }
         
-        @keyframes squiggly-progress {
+        @keyframes squiggly-wave {
           0% {
-            transform: translateX(-100%) scaleY(1);
-          }
-          25% {
-            transform: translateX(-50%) scaleY(1.2);
-          }
-          50% {
-            transform: translateX(0%) scaleY(0.8);
-          }
-          75% {
-            transform: translateX(50%) scaleY(1.2);
+            transform: translateX(-100%);
           }
           100% {
-            transform: translateX(100%) scaleY(1);
-          }
-        }
-        
-        @keyframes squiggly-wave {
-          0%, 100% {
-            clip-path: polygon(0% 50%, 5% 40%, 10% 60%, 15% 30%, 20% 70%, 25% 35%, 30% 65%, 35% 45%, 40% 55%, 45% 35%, 50% 65%, 55% 40%, 60% 60%, 65% 30%, 70% 70%, 75% 40%, 80% 60%, 85% 35%, 90% 65%, 95% 45%, 100% 55%);
-          }
-          33% {
-            clip-path: polygon(0% 60%, 5% 35%, 10% 65%, 15% 40%, 20% 60%, 25% 30%, 30% 70%, 35% 35%, 40% 65%, 45% 40%, 50% 60%, 55% 35%, 60% 65%, 65% 45%, 70% 55%, 75% 35%, 80% 65%, 85% 40%, 90% 60%, 95% 30%, 100% 70%);
-          }
-          66% {
-            clip-path: polygon(0% 45%, 5% 65%, 10% 35%, 15% 70%, 20% 30%, 25% 65%, 30% 40%, 35% 60%, 40% 30%, 45% 70%, 50% 35%, 55% 65%, 60% 40%, 65% 60%, 70% 35%, 75% 65%, 80% 45%, 85% 55%, 90% 35%, 95% 65%, 100% 40%);
+            transform: translateX(100%);
           }
         }
         
         .squiggly-progress {
-          animation: squiggly-progress 2s ease-in-out infinite;
+          position: relative;
+          overflow: hidden;
+          border-radius: inherit;
         }
         
-        .squiggly-wave {
-          animation: squiggly-wave 1.5s ease-in-out infinite;
+        .squiggly-progress::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 200%;
+          height: 100%;
+          background: linear-gradient(
+            90deg,
+            transparent 0%,
+            currentColor 50%,
+            transparent 100%
+          );
+          border-radius: inherit;
+          animation: squiggly-wave 2s ease-in-out infinite;
+        }
+        
+        .squiggly-progress::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: -100%;
+          width: 200%;
+          height: 2px;
+          background: currentColor;
+          transform: translateY(-50%);
+          clip-path: polygon(
+            0% 50%,
+            5% 20%, 10% 80%, 15% 20%, 20% 80%,
+            25% 20%, 30% 80%, 35% 20%, 40% 80%,
+            45% 20%, 50% 80%, 55% 20%, 60% 80%,
+            65% 20%, 70% 80%, 75% 20%, 80% 80%,
+            85% 20%, 90% 80%, 95% 20%, 100% 50%
+          );
+          animation: squiggly-wave 2s ease-in-out infinite;
         }
       `}</style>
 
@@ -642,20 +656,14 @@ export default function ChatGPTReplica() {
                 
                 {/* Squiggly Progress Bar */}
                 <div className="w-full max-w-xs">
-                  <div className={`h-2 rounded-full overflow-hidden ${
+                  <div className={`h-3 rounded-full overflow-hidden ${
                     isDarkMode ? 'bg-zinc-700' : 'bg-gray-200'
                   }`}>
-                    <div className={`h-full rounded-full squiggly-wave ${
+                    <div className={`h-full w-full rounded-full squiggly-progress ${
                       isDarkMode 
-                        ? 'bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500' 
-                        : 'bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600'
-                    }`}>
-                      <div className={`h-full w-full squiggly-progress ${
-                        isDarkMode 
-                          ? 'bg-gradient-to-r from-transparent via-white/30 to-transparent' 
-                          : 'bg-gradient-to-r from-transparent via-white/50 to-transparent'
-                      }`}></div>
-                    </div>
+                        ? 'text-blue-400' 
+                        : 'text-blue-600'
+                    }`}></div>
                   </div>
                   
                   {/* Progress Text */}
