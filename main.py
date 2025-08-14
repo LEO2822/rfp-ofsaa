@@ -1,6 +1,6 @@
-def main():
-    print("Hello from rfp-ofsaa!")
+from docling.document_converter import DocumentConverter
 
-
-if __name__ == "__main__":
-    main()
+source = "" # add a file or file path to load the document in the markdown output
+converter = DocumentConverter()
+result = converter.convert(source)
+print(result.document.export_to_markdown())
