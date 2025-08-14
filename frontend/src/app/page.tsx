@@ -335,7 +335,7 @@ export default function ChatGPTReplica() {
             </div>
             
             {/* Bottom composer - centered */}
-            <div className="flex items-center justify-center pb-8 pt-4">
+            <div className="flex items-center justify-center pb-8 pt-8">
               <div className="w-full max-w-[720px] px-4">
                 <div className="flex items-center gap-2">
                   {/* Composer */}
@@ -375,12 +375,12 @@ export default function ChatGPTReplica() {
 
           {/* Right: Canvas column */}
           {!isCanvasMinimized && (
-            <div className={`relative hidden h-full flex-col border-l md:flex w-full md:w-1/2 flex-shrink-0 ${
-              isDarkMode ? 'border-white/20' : 'border-gray-200'
+            <div className={`relative hidden h-full flex-col border-l-2 md:flex w-full md:w-1/2 flex-shrink-0 ${
+              isDarkMode ? 'border-white/30' : 'border-gray-300'
             }`}>
             {/* Canvas header */}
-            <div className={`flex items-center justify-between px-6 py-4 border-b ${
-              isDarkMode ? 'border-white/20' : 'border-gray-200'
+            <div className={`flex items-center justify-between px-6 py-4 border-b-2 ${
+              isDarkMode ? 'border-white/30' : 'border-gray-300'
             }`}>
               <div className={`flex items-center gap-2 ${
                 isDarkMode ? 'text-zinc-200' : 'text-gray-700'
