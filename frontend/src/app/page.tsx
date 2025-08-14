@@ -41,6 +41,7 @@ export default function ChatGPTReplica() {
   const [canvasName, setCanvasName] = useState("New");
   const [isEditingName, setIsEditingName] = useState(false);
   const [tempName, setTempName] = useState("");
+  const [isCanvasMinimized, setIsCanvasMinimized] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
 
   // Handle escape key to close help modal
@@ -98,6 +99,15 @@ export default function ChatGPTReplica() {
       e.preventDefault();
       cancelEditing();
     }
+  };
+
+  // Handle canvas minimize/restore
+  const minimizeCanvas = () => {
+    setIsCanvasMinimized(true);
+  };
+
+  const restoreCanvas = () => {
+    setIsCanvasMinimized(false);
   };
 
   return (
@@ -245,7 +255,9 @@ export default function ChatGPTReplica() {
         {/* Two-panel layout */}
         <div className="relative h-full w-full flex flex-col md:flex-row">
           {/* Left: Chat column */}
-          <div className="relative flex h-full flex-col w-full md:w-1/2 flex-shrink-0">
+          <div className={`relative flex h-full flex-col flex-shrink-0 ${
+            isCanvasMinimized ? 'w-full' : 'w-full md:w-1/2'
+          }`}>
             {/* Chat content area */}
             <div className="flex-1 flex items-center justify-center">
               <div className="w-full">
@@ -293,9 +305,10 @@ export default function ChatGPTReplica() {
           </div>
 
           {/* Right: Canvas column */}
-          <div className={`relative hidden h-full flex-col border-l-2 md:flex w-full md:w-1/2 flex-shrink-0 ${
-            isDarkMode ? 'border-white/20' : 'border-gray-300'
-          }`}>
+          {!isCanvasMinimized && (
+            <div className={`relative hidden h-full flex-col border-l-2 md:flex w-full md:w-1/2 flex-shrink-0 ${
+              isDarkMode ? 'border-white/20' : 'border-gray-300'
+            }`}>
             {/* Canvas header */}
             <div className={`flex items-center justify-between px-6 py-4 border-b-2 ${
               isDarkMode ? 'border-white/20' : 'border-gray-300'
@@ -303,7 +316,14 @@ export default function ChatGPTReplica() {
               <div className={`flex items-center gap-2 ${
                 isDarkMode ? 'text-zinc-200' : 'text-gray-700'
               }`}>
-                <XMarkIcon className="h-5 w-5" />
+                <button
+                  onClick={minimizeCanvas}
+                  className={`p-1 rounded transition-colors ${
+                    isDarkMode ? 'hover:bg-white/10' : 'hover:bg-gray-100'
+                  }`}
+                >
+                  <XMarkIcon className="h-5 w-5" />
+                </button>
                 <div className="flex items-center gap-1 text-sm">
                   {isEditingName ? (
                     <input
@@ -379,6 +399,25 @@ export default function ChatGPTReplica() {
               <MarkdownCanvas isDarkMode={isDarkMode} />
             </div>
           </div>
+          )}
+
+          {/* Restore Canvas Button (when minimized) */}
+          {isCanvasMinimized && (
+            <div className="absolute top-4 right-4 z-20">
+              <button
+                onClick={restoreCanvas}
+                className={`px-3 py-2 rounded-lg transition-colors flex items-center gap-2 ${
+                  isDarkMode 
+                    ? 'bg-white/10 hover:bg-white/20 text-zinc-200' 
+                    : 'bg-amber-100 hover:bg-amber-200 text-amber-900'
+                }`}
+                aria-label="Restore canvas"
+              >
+                <span className="text-sm font-medium">{canvasName}</span>
+                <ChevronDownIcon className="h-5 w-5" />
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Help Modal */}
