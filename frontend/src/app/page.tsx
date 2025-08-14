@@ -270,7 +270,7 @@ export default function ChatGPTReplica() {
               <div className="w-full max-w-[720px] px-4">
                 <div className="flex items-center gap-2">
                   {/* Composer */}
-                  <div className={`flex w-full items-center gap-3 rounded-full border px-4 py-3 shadow-sm ${
+                  <div className={`flex w-full items-center gap-3 rounded-full border px-4 py-3 ${
                     isDarkMode 
                       ? 'border-white/10 bg-white/[0.03]' 
                       : 'border-amber-200/50 bg-[#FFF8F0]'
@@ -366,16 +366,6 @@ export default function ChatGPTReplica() {
                   isDarkMode ? 'hover:text-zinc-200' : 'hover:text-gray-800'
                 }`}>
                   <ArrowUturnRightIcon className="h-5 w-5" />
-                </button>
-                <button className={`p-1 transition-colors ${
-                  isDarkMode ? 'hover:text-zinc-200' : 'hover:text-gray-800'
-                }`}>
-                  <ArrowUpOnSquareIcon className="h-5 w-5" />
-                </button>
-                <button className={`p-1 transition-colors ${
-                  isDarkMode ? 'hover:text-zinc-200' : 'hover:text-gray-800'
-                }`}>
-                  <LinkIcon className="h-5 w-5" />
                 </button>
                 <button className={`p-1 transition-colors ${
                   isDarkMode ? 'hover:text-zinc-200' : 'hover:text-gray-800'
