@@ -100,10 +100,11 @@ export default function ChatGPTReplica() {
         {/* Animated gradient backgrounds */}
         {isDarkMode ? (
           <>
-            <div className="absolute inset-0 opacity-50">
-              <div className="animated-gradient absolute top-0 -left-1/4 h-[150%] w-[150%] bg-gradient-to-br from-purple-900/30 via-transparent to-blue-900/30 blur-3xl" />
-              <div className="animated-gradient-2 absolute -top-1/4 right-0 h-[150%] w-[150%] bg-gradient-to-bl from-pink-900/20 via-transparent to-indigo-900/20 blur-3xl" />
-              <div className="animated-gradient-3 absolute bottom-0 left-1/3 h-[120%] w-[120%] bg-gradient-to-tr from-cyan-900/20 via-transparent to-violet-900/20 blur-3xl" />
+            <div className="absolute inset-0 opacity-70">
+              <div className="animated-gradient absolute top-0 -left-1/4 h-[150%] w-[150%] bg-gradient-to-br from-emerald-500/20 via-teal-600/15 to-cyan-500/20 blur-3xl" />
+              <div className="animated-gradient-2 absolute -top-1/4 right-0 h-[150%] w-[150%] bg-gradient-to-bl from-violet-600/25 via-fuchsia-600/20 to-pink-500/25 blur-3xl" />
+              <div className="animated-gradient-3 absolute bottom-0 left-1/3 h-[120%] w-[120%] bg-gradient-to-tr from-indigo-600/20 via-blue-600/15 to-purple-600/20 blur-3xl" />
+              <div className="animated-gradient absolute top-1/2 right-1/4 h-[100%] w-[100%] bg-gradient-to-tl from-rose-600/15 via-orange-600/10 to-amber-600/15 blur-3xl" />
             </div>
           </>
         ) : (
