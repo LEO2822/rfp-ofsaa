@@ -331,6 +331,7 @@ export default function ChatGPTReplica() {
               <DocumentDisplay 
                 isDarkMode={isDarkMode}
                 content={documentContent}
+                isCanvasMinimized={isCanvasMinimized}
               />
             </div>
             

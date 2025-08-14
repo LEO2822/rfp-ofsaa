@@ -10,9 +10,10 @@ import rehypeHighlight from "rehype-highlight";
 interface DocumentDisplayProps {
   isDarkMode: boolean;
   content: string;
+  isCanvasMinimized?: boolean;
 }
 
-export default function DocumentDisplay({ isDarkMode, content }: DocumentDisplayProps) {
+export default function DocumentDisplay({ isDarkMode, content, isCanvasMinimized = false }: DocumentDisplayProps) {
   if (!content) {
     return (
       <div className="flex-1 flex flex-col h-full">
@@ -27,7 +28,9 @@ export default function DocumentDisplay({ isDarkMode, content }: DocumentDisplay
           </div>
         </div>
         
-        <div className="flex-1 flex items-center justify-center">
+        <div className={`flex-1 flex items-center justify-center ${
+          isCanvasMinimized ? 'px-20' : 'px-6'
+        }`}>
           <div className={`text-center ${isDarkMode ? 'text-zinc-400' : 'text-gray-500'}`}>
             <p className="text-sm">Upload a document to view its content here</p>
           </div>
@@ -49,7 +52,9 @@ export default function DocumentDisplay({ isDarkMode, content }: DocumentDisplay
         </div>
       </div>
       
-      <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 pb-4">
+      <div className={`flex-1 overflow-y-auto overflow-x-hidden py-6 pb-4 ${
+        isCanvasMinimized ? 'px-20' : 'px-6'
+      }`}>
         <div 
           className="prose prose-sm max-w-none"
           style={{ 
