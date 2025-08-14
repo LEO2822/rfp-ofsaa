@@ -538,18 +538,19 @@ export default function ChatGPTReplica() {
 
         {/* Progress Modal */}
         {showProgress && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-md"
+          <div 
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-md"
             style={{ backgroundColor: isDarkMode ? 'rgba(11, 11, 13, 0.8)' : 'rgba(255, 250, 245, 0.8)' }}
           >
             <div 
-              className={`relative w-full max-w-md flex flex-col rounded-2xl shadow-2xl backdrop-blur-xl ${
+              className={`relative w-full max-w-md flex flex-col rounded-3xl shadow-2xl backdrop-blur-xl border-2 ${
                 isDarkMode 
-                  ? 'bg-zinc-900/95 text-zinc-100 border border-white/20' 
-                  : 'bg-white/95 text-gray-900 border border-amber-200/50'
+                  ? 'bg-zinc-900/95 text-zinc-100 border-white/20 shadow-black/50' 
+                  : 'bg-white/95 text-gray-900 border-amber-200/60 shadow-black/20'
               }`}
             >
               {/* Modal Header */}
-              <div className={`flex-shrink-0 flex items-center justify-center p-6 border-b backdrop-blur-sm ${
+              <div className={`flex-shrink-0 flex items-center justify-center p-6 border-b backdrop-blur-sm rounded-t-3xl ${
                 isDarkMode 
                   ? 'border-white/20 bg-zinc-900/90' 
                   : 'border-amber-200/50 bg-white/90'
@@ -603,15 +604,15 @@ export default function ChatGPTReplica() {
             onClick={() => setShowClearConfirm(false)}
           >
             <div 
-              className={`relative w-full max-w-md flex flex-col rounded-2xl shadow-2xl backdrop-blur-xl ${
+              className={`relative w-full max-w-md flex flex-col rounded-3xl shadow-2xl backdrop-blur-xl border-2 ${
                 isDarkMode 
-                  ? 'bg-zinc-900/95 text-zinc-100 border border-white/20' 
-                  : 'bg-white/95 text-gray-900 border border-amber-200/50'
+                  ? 'bg-zinc-900/95 text-zinc-100 border-white/20 shadow-black/50' 
+                  : 'bg-white/95 text-gray-900 border-amber-200/60 shadow-black/20'
               }`}
               onClick={(e) => e.stopPropagation()}
             >
               {/* Modal Header */}
-              <div className={`flex-shrink-0 flex items-center justify-between p-6 border-b backdrop-blur-sm ${
+              <div className={`flex-shrink-0 flex items-center justify-between p-6 border-b backdrop-blur-sm rounded-t-3xl ${
                 isDarkMode 
                   ? 'border-white/20 bg-zinc-900/90' 
                   : 'border-amber-200/50 bg-white/90'
@@ -621,10 +622,10 @@ export default function ChatGPTReplica() {
                 </h2>
                 <button
                   onClick={() => setShowClearConfirm(false)}
-                  className={`p-2 rounded-full transition-colors ${
+                  className={`p-2 rounded-2xl transition-all duration-200 shadow-lg ${
                     isDarkMode 
-                      ? 'hover:bg-white/10 text-zinc-300/90 hover:text-zinc-200' 
-                      : 'hover:bg-amber-100 text-gray-600 hover:text-amber-900'
+                      ? 'hover:bg-white/10 text-zinc-300/90 hover:text-zinc-200 shadow-white/10' 
+                      : 'hover:bg-amber-100 text-gray-600 hover:text-amber-900 shadow-black/10'
                   }`}
                 >
                   <XMarkIcon className="h-6 w-6" />
@@ -639,17 +640,17 @@ export default function ChatGPTReplica() {
               </div>
 
               {/* Modal Footer */}
-              <div className={`flex-shrink-0 flex justify-end gap-3 p-6 border-t backdrop-blur-sm ${
+              <div className={`flex-shrink-0 flex justify-end gap-3 p-6 border-t backdrop-blur-sm rounded-b-3xl ${
                 isDarkMode 
                   ? 'border-white/20 bg-zinc-900/90' 
                   : 'border-amber-200/50 bg-white/90'
               }`}>
                 <button
                   onClick={() => setShowClearConfirm(false)}
-                  className={`px-6 py-3 rounded-full transition-colors shadow-sm ${
+                  className={`px-6 py-3 rounded-2xl transition-all duration-200 shadow-lg ${
                     isDarkMode 
-                      ? 'bg-white/10 hover:bg-white/20 text-zinc-200 border border-white/20' 
-                      : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200'
+                      ? 'bg-white/10 hover:bg-white/20 text-zinc-200 border border-white/20 shadow-white/10' 
+                      : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200 shadow-black/10'
                   }`}
                   style={{ fontWeight: 500 }}
                 >
@@ -657,10 +658,10 @@ export default function ChatGPTReplica() {
                 </button>
                 <button
                   onClick={handleClearDocument}
-                  className={`px-6 py-3 rounded-full transition-colors shadow-sm ${
+                  className={`px-6 py-3 rounded-2xl transition-all duration-200 shadow-lg ${
                     isDarkMode 
-                      ? 'bg-red-600 hover:bg-red-700 text-white' 
-                      : 'bg-red-600 hover:bg-red-700 text-white'
+                      ? 'bg-red-600 hover:bg-red-700 text-white shadow-red-500/30' 
+                      : 'bg-red-600 hover:bg-red-700 text-white shadow-red-500/30'
                   }`}
                   style={{ fontWeight: 500 }}
                 >
@@ -679,15 +680,15 @@ export default function ChatGPTReplica() {
             onClick={() => setShowHelp(false)}
           >
             <div 
-              className={`relative w-full max-w-4xl max-h-[90vh] flex flex-col rounded-2xl shadow-2xl backdrop-blur-xl ${
+              className={`relative w-full max-w-4xl max-h-[90vh] flex flex-col rounded-3xl shadow-2xl backdrop-blur-xl border-2 ${
                 isDarkMode 
-                  ? 'bg-zinc-900/95 text-zinc-100 border border-white/20' 
-                  : 'bg-white/95 text-gray-900 border border-amber-200/50'
+                  ? 'bg-zinc-900/95 text-zinc-100 border-white/20 shadow-black/50' 
+                  : 'bg-white/95 text-gray-900 border-amber-200/60 shadow-black/20'
               }`}
               onClick={(e) => e.stopPropagation()}
             >
               {/* Modal Header */}
-              <div className={`flex-shrink-0 flex items-center justify-between p-6 border-b backdrop-blur-sm ${
+              <div className={`flex-shrink-0 flex items-center justify-between p-6 border-b backdrop-blur-sm rounded-t-3xl ${
                 isDarkMode 
                   ? 'border-white/20 bg-zinc-900/90' 
                   : 'border-amber-200/50 bg-white/90'
@@ -697,10 +698,10 @@ export default function ChatGPTReplica() {
                 </h2>
                 <button
                   onClick={() => setShowHelp(false)}
-                  className={`p-2 rounded-full transition-colors ${
+                  className={`p-2 rounded-2xl transition-all duration-200 shadow-lg ${
                     isDarkMode 
-                      ? 'hover:bg-white/10 text-zinc-300/90 hover:text-zinc-200' 
-                      : 'hover:bg-amber-100 text-gray-600 hover:text-amber-900'
+                      ? 'hover:bg-white/10 text-zinc-300/90 hover:text-zinc-200 shadow-white/10' 
+                      : 'hover:bg-amber-100 text-gray-600 hover:text-amber-900 shadow-black/10'
                   }`}
                 >
                   <XMarkIcon className="h-6 w-6" />
@@ -1027,17 +1028,17 @@ export default function ChatGPTReplica() {
               </div>
 
               {/* Modal Footer */}
-              <div className={`flex-shrink-0 flex justify-end p-6 border-t backdrop-blur-sm ${
+              <div className={`flex-shrink-0 flex justify-end p-6 border-t backdrop-blur-sm rounded-b-3xl ${
                 isDarkMode 
                   ? 'border-white/20 bg-zinc-900/90' 
                   : 'border-amber-200/50 bg-white/90'
               }`}>
                 <button
                   onClick={() => setShowHelp(false)}
-                  className={`px-6 py-3 rounded-full transition-colors shadow-sm ${
+                  className={`px-6 py-3 rounded-2xl transition-all duration-200 shadow-lg ${
                     isDarkMode 
-                      ? 'bg-white/10 hover:bg-white/20 text-zinc-200 border border-white/20' 
-                      : 'bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-200/50'
+                      ? 'bg-white/10 hover:bg-white/20 text-zinc-200 border border-white/20 shadow-white/10' 
+                      : 'bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-200/50 shadow-amber-200/30'
                   }`}
                   style={{ fontWeight: 500 }}
                 >
