@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ChevronDownIcon,
   DocumentTextIcon,
@@ -25,6 +25,7 @@ import {
   SunIcon,
   MoonIcon,
   ArrowUpTrayIcon,
+  QuestionMarkCircleIcon,
 } from "@heroicons/react/24/outline";
 import MarkdownCanvas from "@/components/MarkdownCanvas";
 
@@ -36,6 +37,27 @@ import MarkdownCanvas from "@/components/MarkdownCanvas";
 export default function ChatGPTReplica() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [showHelp, setShowHelp] = useState(false);
+
+  // Handle escape key to close help modal
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && showHelp) {
+        setShowHelp(false);
+      }
+    };
+
+    if (showHelp) {
+      document.addEventListener('keydown', handleEscape);
+      // Prevent background scrolling when modal is open
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [showHelp]);
 
   return (
     <div
@@ -279,6 +301,15 @@ export default function ChatGPTReplica() {
                 }`}>
                   <ArrowDownTrayIcon className="h-5 w-5" />
                 </button>
+                <button 
+                  onClick={() => setShowHelp(true)}
+                  className={`p-1 transition-colors ${
+                    isDarkMode ? 'hover:text-zinc-200' : 'hover:text-gray-800'
+                  }`}
+                  aria-label="Help & Guide"
+                >
+                  <QuestionMarkCircleIcon className="h-5 w-5" />
+                </button>
               </div>
             </div>
 
@@ -288,6 +319,383 @@ export default function ChatGPTReplica() {
             </div>
           </div>
         </div>
+
+        {/* Help Modal */}
+        {showHelp && (
+          <div 
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-md"
+            style={{ backgroundColor: isDarkMode ? 'rgba(11, 11, 13, 0.8)' : 'rgba(255, 250, 245, 0.8)' }}
+            onClick={() => setShowHelp(false)}
+          >
+            <div 
+              className={`relative w-full max-w-4xl max-h-[90vh] flex flex-col rounded-2xl shadow-2xl backdrop-blur-xl ${
+                isDarkMode 
+                  ? 'bg-zinc-900/95 text-zinc-100 border border-white/20' 
+                  : 'bg-white/95 text-gray-900 border border-amber-200/50'
+              }`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal Header */}
+              <div className={`flex-shrink-0 flex items-center justify-between p-6 border-b backdrop-blur-sm ${
+                isDarkMode 
+                  ? 'border-white/20 bg-zinc-900/90' 
+                  : 'border-amber-200/50 bg-white/90'
+              }`}>
+                <h2 className="text-2xl font-medium" style={{ fontWeight: 500 }}>
+                  📝 Markdown Canvas Guide
+                </h2>
+                <button
+                  onClick={() => setShowHelp(false)}
+                  className={`p-2 rounded-full transition-colors ${
+                    isDarkMode 
+                      ? 'hover:bg-white/10 text-zinc-300/90 hover:text-zinc-200' 
+                      : 'hover:bg-amber-100 text-gray-600 hover:text-amber-900'
+                  }`}
+                >
+                  <XMarkIcon className="h-6 w-6" />
+                </button>
+              </div>
+
+              {/* Modal Content */}
+              <div className="flex-1 p-6 space-y-8 overflow-y-auto min-h-0" style={{ fontWeight: 500 }}>
+                {/* How It Works */}
+                <section>
+                  <h3 className="text-xl mb-4 flex items-center gap-2" style={{ fontWeight: 500 }}>
+                    ⚡ How the Canvas Works
+                  </h3>
+                  <div className="space-y-3 text-sm">
+                    <p className={isDarkMode ? 'text-zinc-200' : 'text-gray-900'}>
+                      The Markdown Canvas is a smart editor that switches between <strong>Edit Mode</strong> and <strong>Preview Mode</strong>:
+                    </p>
+                    <ul className="space-y-2 ml-4">
+                      <li className="flex items-start gap-2">
+                        <span className="text-green-500 mt-1">✓</span>
+                        <span><strong>Edit Mode:</strong> Type or paste Markdown - shows as plain text</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-blue-500 mt-1">✓</span>
+                        <span><strong>Preview Mode:</strong> Shows beautifully rendered Markdown with formatting</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-purple-500 mt-1">✓</span>
+                        <span><strong>Auto-Switch:</strong> Automatically switches to preview 1.5 seconds after you stop typing</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-orange-500 mt-1">✓</span>
+                        <span><strong>Click to Edit:</strong> Click anywhere in preview mode to edit again</span>
+                      </li>
+                    </ul>
+                  </div>
+                </section>
+
+                {/* Keyboard Shortcuts */}
+                <section>
+                  <h3 className="text-xl mb-4 flex items-center gap-2" style={{ fontWeight: 500 }}>
+                    ⌨️ Keyboard Shortcuts
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className={`p-4 rounded-lg border shadow-sm ${
+                      isDarkMode 
+                        ? 'bg-white/[0.03] border-white/10' 
+                        : 'bg-[#FFF8F0] border-amber-200/50'
+                    }`}>
+                      <div className="flex justify-between items-center mb-2">
+                        <kbd className={`px-3 py-1.5 text-xs rounded-full ${
+                          isDarkMode 
+                            ? 'bg-white/10 text-zinc-300' 
+                            : 'bg-amber-100 text-amber-900'
+                        }`}>Escape</kbd>
+                        <span className={`text-sm ${
+                          isDarkMode ? 'text-zinc-200' : 'text-gray-900'
+                        }`}>Preview Now</span>
+                      </div>
+                      <p className={`text-xs ${
+                        isDarkMode ? 'text-zinc-400/70' : 'text-gray-500'
+                      }`}>Instantly switch to preview mode</p>
+                    </div>
+                    <div className={`p-4 rounded-lg border shadow-sm ${
+                      isDarkMode 
+                        ? 'bg-white/[0.03] border-white/10' 
+                        : 'bg-[#FFF8F0] border-amber-200/50'
+                    }`}>
+                      <div className="flex justify-between items-center mb-2">
+                        <div className="flex gap-1 items-center">
+                          <kbd className={`px-3 py-1.5 text-xs rounded-full ${
+                            isDarkMode 
+                              ? 'bg-white/10 text-zinc-300' 
+                              : 'bg-amber-100 text-amber-900'
+                          }`}>Ctrl</kbd>
+                          <span className={`text-xs ${
+                            isDarkMode ? 'text-zinc-400' : 'text-gray-500'
+                          }`}>+</span>
+                          <kbd className={`px-3 py-1.5 text-xs rounded-full ${
+                            isDarkMode 
+                              ? 'bg-white/10 text-zinc-300' 
+                              : 'bg-amber-100 text-amber-900'
+                          }`}>Enter</kbd>
+                        </div>
+                        <span className={`text-sm ${
+                          isDarkMode ? 'text-zinc-200' : 'text-gray-900'
+                        }`}>Preview Now</span>
+                      </div>
+                      <p className={`text-xs ${
+                        isDarkMode ? 'text-zinc-400/70' : 'text-gray-500'
+                      }`}>Alternative preview shortcut</p>
+                    </div>
+                    <div className={`p-4 rounded-lg border shadow-sm ${
+                      isDarkMode 
+                        ? 'bg-white/[0.03] border-white/10' 
+                        : 'bg-[#FFF8F0] border-amber-200/50'
+                    }`}>
+                      <div className="flex justify-between items-center mb-2">
+                        <kbd className={`px-3 py-1.5 text-xs rounded-full ${
+                          isDarkMode 
+                            ? 'bg-white/10 text-zinc-300' 
+                            : 'bg-amber-100 text-amber-900'
+                        }`}>Enter</kbd>
+                        <span className={`text-sm ${
+                          isDarkMode ? 'text-zinc-200' : 'text-gray-900'
+                        }`}>New Line</span>
+                      </div>
+                      <p className={`text-xs ${
+                        isDarkMode ? 'text-zinc-400/70' : 'text-gray-500'
+                      }`}>Create new line (normal behavior)</p>
+                    </div>
+                    <div className={`p-4 rounded-lg border shadow-sm ${
+                      isDarkMode 
+                        ? 'bg-white/[0.03] border-white/10' 
+                        : 'bg-[#FFF8F0] border-amber-200/50'
+                    }`}>
+                      <div className="flex justify-between items-center mb-2">
+                        <kbd className={`px-3 py-1.5 text-xs rounded-full ${
+                          isDarkMode 
+                            ? 'bg-white/10 text-zinc-300' 
+                            : 'bg-amber-100 text-amber-900'
+                        }`}>Click</kbd>
+                        <span className={`text-sm ${
+                          isDarkMode ? 'text-zinc-200' : 'text-gray-900'
+                        }`}>Edit Mode</span>
+                      </div>
+                      <p className={`text-xs ${
+                        isDarkMode ? 'text-zinc-400/70' : 'text-gray-500'
+                      }`}>Click preview to return to editing</p>
+                    </div>
+                  </div>
+                </section>
+
+                {/* Markdown Syntax Guide */}
+                <section>
+                  <h3 className="text-xl mb-4 flex items-center gap-2" style={{ fontWeight: 500 }}>
+                    📚 Markdown Syntax Guide
+                  </h3>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Headings */}
+                    <div>
+                      <h4 className={`mb-2 text-blue-500 ${
+                        isDarkMode ? 'text-blue-400' : 'text-blue-600'
+                      }`} style={{ fontWeight: 500 }}>Headings</h4>
+                      <div className={`p-3 rounded-lg text-sm font-mono border ${
+                        isDarkMode 
+                          ? 'bg-white/[0.03] border-white/10' 
+                          : 'bg-[#FFF8F0] border-amber-200/50'
+                      }`}>
+                        <div># Heading 1</div>
+                        <div>## Heading 2</div>
+                        <div>### Heading 3</div>
+                      </div>
+                    </div>
+
+                    {/* Text Formatting */}
+                    <div>
+                      <h4 className={`mb-2 ${
+                        isDarkMode ? 'text-green-400' : 'text-green-600'
+                      }`} style={{ fontWeight: 500 }}>Text Formatting</h4>
+                      <div className={`p-3 rounded-lg text-sm font-mono border ${
+                        isDarkMode 
+                          ? 'bg-white/[0.03] border-white/10' 
+                          : 'bg-[#FFF8F0] border-amber-200/50'
+                      }`}>
+                        <div>**bold text**</div>
+                        <div>*italic text*</div>
+                        <div>`inline code`</div>
+                        <div>~~strikethrough~~</div>
+                      </div>
+                    </div>
+
+                    {/* Lists */}
+                    <div>
+                      <h4 className={`mb-2 ${
+                        isDarkMode ? 'text-purple-400' : 'text-purple-600'
+                      }`} style={{ fontWeight: 500 }}>Lists</h4>
+                      <div className={`p-3 rounded-lg text-sm font-mono border ${
+                        isDarkMode 
+                          ? 'bg-white/[0.03] border-white/10' 
+                          : 'bg-[#FFF8F0] border-amber-200/50'
+                      }`}>
+                        <div>- Bullet point</div>
+                        <div>- Another item</div>
+                        <div className="mt-2">1. Numbered list</div>
+                        <div>2. Second item</div>
+                      </div>
+                    </div>
+
+                    {/* Links & Images */}
+                    <div>
+                      <h4 className={`mb-2 ${
+                        isDarkMode ? 'text-orange-400' : 'text-orange-600'
+                      }`} style={{ fontWeight: 500 }}>Links & Images</h4>
+                      <div className={`p-3 rounded-lg text-sm font-mono border ${
+                        isDarkMode 
+                          ? 'bg-white/[0.03] border-white/10' 
+                          : 'bg-[#FFF8F0] border-amber-200/50'
+                      }`}>
+                        <div>[Link text](https://url.com)</div>
+                        <div>![Image](image-url.jpg)</div>
+                      </div>
+                    </div>
+
+                    {/* Code Blocks */}
+                    <div>
+                      <h4 className={`mb-2 ${
+                        isDarkMode ? 'text-red-400' : 'text-red-600'
+                      }`} style={{ fontWeight: 500 }}>Code Blocks</h4>
+                      <div className={`p-3 rounded-lg text-sm font-mono border ${
+                        isDarkMode 
+                          ? 'bg-white/[0.03] border-white/10' 
+                          : 'bg-[#FFF8F0] border-amber-200/50'
+                      }`}>
+                        <div>```javascript</div>
+                        <div>const code = &quot;here&quot;;</div>
+                        <div>```</div>
+                      </div>
+                    </div>
+
+                    {/* Tables */}
+                    <div>
+                      <h4 className={`mb-2 ${
+                        isDarkMode ? 'text-teal-400' : 'text-teal-600'
+                      }`} style={{ fontWeight: 500 }}>Tables</h4>
+                      <div className={`p-3 rounded-lg text-sm font-mono border ${
+                        isDarkMode 
+                          ? 'bg-white/[0.03] border-white/10' 
+                          : 'bg-[#FFF8F0] border-amber-200/50'
+                      }`}>
+                        <div>| Header | Header |</div>
+                        <div>|--------|--------|</div>
+                        <div>| Cell   | Cell   |</div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                {/* Advanced Features */}
+                <section>
+                  <h3 className="text-xl mb-4 flex items-center gap-2" style={{ fontWeight: 500 }}>
+                    🚀 Advanced Features
+                  </h3>
+                  <div className="space-y-4">
+                    <div className={`p-4 rounded-lg border shadow-sm ${
+                      isDarkMode 
+                        ? 'bg-white/[0.03] border-white/10' 
+                        : 'bg-[#FFF8F0] border-amber-200/50'
+                    }`}>
+                      <h4 className="mb-2" style={{ fontWeight: 500 }}>✨ Smart Paste</h4>
+                      <p className={`text-sm ${
+                        isDarkMode ? 'text-zinc-400/80' : 'text-gray-600'
+                      }`}>Paste large Markdown content and it automatically switches to preview mode for instant visualization.</p>
+                    </div>
+                    <div className={`p-4 rounded-lg border shadow-sm ${
+                      isDarkMode 
+                        ? 'bg-white/[0.03] border-white/10' 
+                        : 'bg-[#FFF8F0] border-amber-200/50'
+                    }`}>
+                      <h4 className="mb-2" style={{ fontWeight: 500 }}>🎯 Syntax Highlighting</h4>
+                      <p className={`text-sm ${
+                        isDarkMode ? 'text-zinc-400/80' : 'text-gray-600'
+                      }`}>Code blocks automatically get syntax highlighting for better readability.</p>
+                    </div>
+                    <div className={`p-4 rounded-lg border shadow-sm ${
+                      isDarkMode 
+                        ? 'bg-white/[0.03] border-white/10' 
+                        : 'bg-[#FFF8F0] border-amber-200/50'
+                    }`}>
+                      <h4 className="mb-2" style={{ fontWeight: 500 }}>📱 Responsive Design</h4>
+                      <p className={`text-sm ${
+                        isDarkMode ? 'text-zinc-400/80' : 'text-gray-600'
+                      }`}>Works perfectly on both desktop and mobile devices with proper text wrapping.</p>
+                    </div>
+                    <div className={`p-4 rounded-lg border shadow-sm ${
+                      isDarkMode 
+                        ? 'bg-white/[0.03] border-white/10' 
+                        : 'bg-[#FFF8F0] border-amber-200/50'
+                    }`}>
+                      <h4 className="mb-2" style={{ fontWeight: 500 }}>🌙 Theme Support</h4>
+                      <p className={`text-sm ${
+                        isDarkMode ? 'text-zinc-400/80' : 'text-gray-600'
+                      }`}>Automatically adapts to light and dark themes for comfortable viewing.</p>
+                    </div>
+                  </div>
+                </section>
+
+                {/* Tips & Tricks */}
+                <section>
+                  <h3 className="text-xl mb-4 flex items-center gap-2" style={{ fontWeight: 500 }}>
+                    💡 Tips & Tricks
+                  </h3>
+                  <div className="space-y-3">
+                    <div className={`p-4 rounded-lg border-l-4 ${
+                      isDarkMode 
+                        ? 'bg-blue-400/10 border-blue-400 text-blue-300' 
+                        : 'bg-blue-50 border-blue-400 text-blue-700'
+                    }`}>
+                      <strong>Tip:</strong> Use the 1.5-second auto-preview to write naturally without interruption.
+                    </div>
+                    <div className={`p-4 rounded-lg border-l-4 ${
+                      isDarkMode 
+                        ? 'bg-green-400/10 border-green-400 text-green-300' 
+                        : 'bg-green-50 border-green-400 text-green-700'
+                    }`}>
+                      <strong>Tip:</strong> Press Escape for instant preview when you want to see results immediately.
+                    </div>
+                    <div className={`p-4 rounded-lg border-l-4 ${
+                      isDarkMode 
+                        ? 'bg-purple-400/10 border-purple-400 text-purple-300' 
+                        : 'bg-purple-50 border-purple-400 text-purple-700'
+                    }`}>
+                      <strong>Tip:</strong> Click anywhere in the preview to continue editing from where you left off.
+                    </div>
+                    <div className={`p-4 rounded-lg border-l-4 ${
+                      isDarkMode 
+                        ? 'bg-orange-400/10 border-orange-400 text-orange-300' 
+                        : 'bg-orange-50 border-orange-400 text-orange-700'
+                    }`}>
+                      <strong>Tip:</strong> Long content automatically scrolls - both in edit and preview modes.
+                    </div>
+                  </div>
+                </section>
+              </div>
+
+              {/* Modal Footer */}
+              <div className={`flex-shrink-0 flex justify-end p-6 border-t backdrop-blur-sm ${
+                isDarkMode 
+                  ? 'border-white/20 bg-zinc-900/90' 
+                  : 'border-amber-200/50 bg-white/90'
+              }`}>
+                <button
+                  onClick={() => setShowHelp(false)}
+                  className={`px-6 py-3 rounded-full transition-colors shadow-sm ${
+                    isDarkMode 
+                      ? 'bg-white/10 hover:bg-white/20 text-zinc-200 border border-white/20' 
+                      : 'bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-200/50'
+                  }`}
+                  style={{ fontWeight: 500 }}
+                >
+                  Got it!
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

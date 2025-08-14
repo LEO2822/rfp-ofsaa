@@ -1,0 +1,1 @@
+Implement of initial instruction guide kinda like what each button does.
