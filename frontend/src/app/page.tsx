@@ -46,18 +46,23 @@ export default function ChatGPTReplica() {
   const [documentContent, setDocumentContent] = useState("");
   const [documentFilename, setDocumentFilename] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Handle escape key to close help modal
+  // Handle escape key to close modals
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && showHelp) {
-        setShowHelp(false);
+      if (e.key === 'Escape') {
+        if (showHelp) {
+          setShowHelp(false);
+        } else if (showClearConfirm) {
+          setShowClearConfirm(false);
+        }
       }
     };
 
-    if (showHelp) {
+    if (showHelp || showClearConfirm) {
       document.addEventListener('keydown', handleEscape);
       // Prevent background scrolling when modal is open
       document.body.style.overflow = 'hidden';
@@ -67,7 +72,7 @@ export default function ChatGPTReplica() {
       document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = 'unset';
     };
-  }, [showHelp]);
+  }, [showHelp, showClearConfirm]);
 
   // Focus input when editing starts
   useEffect(() => {
@@ -148,6 +153,13 @@ export default function ChatGPTReplica() {
     } finally {
       setIsUploading(false);
     }
+  };
+
+  // Handle clear document
+  const handleClearDocument = () => {
+    setDocumentContent("");
+    setDocumentFilename("");
+    setShowClearConfirm(false);
   };
 
   return (
@@ -294,6 +306,22 @@ export default function ChatGPTReplica() {
               {isUploading ? 'Uploading...' : 'Upload'}
             </span>
           </button>
+
+          {/* Clear button - only show when there's content */}
+          {documentContent && (
+            <button
+              onClick={() => setShowClearConfirm(true)}
+              className={`px-3 py-2 rounded-lg transition-colors flex items-center gap-2 ${
+                isDarkMode 
+                  ? 'bg-white/10 hover:bg-white/20 text-zinc-200' 
+                  : 'bg-amber-100 hover:bg-amber-200 text-amber-900'
+              }`}
+              aria-label="Clear document"
+            >
+              <XMarkIcon className="h-5 w-5" />
+              <span className="text-sm font-medium">Clear</span>
+            </button>
+          )}
 
           {/* Filename display */}
           {documentFilename && (
@@ -479,6 +507,82 @@ export default function ChatGPTReplica() {
             </div>
           )}
         </div>
+
+        {/* Clear Confirmation Modal */}
+        {showClearConfirm && (
+          <div 
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-md"
+            style={{ backgroundColor: isDarkMode ? 'rgba(11, 11, 13, 0.8)' : 'rgba(255, 250, 245, 0.8)' }}
+            onClick={() => setShowClearConfirm(false)}
+          >
+            <div 
+              className={`relative w-full max-w-md flex flex-col rounded-2xl shadow-2xl backdrop-blur-xl ${
+                isDarkMode 
+                  ? 'bg-zinc-900/95 text-zinc-100 border border-white/20' 
+                  : 'bg-white/95 text-gray-900 border border-amber-200/50'
+              }`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal Header */}
+              <div className={`flex-shrink-0 flex items-center justify-between p-6 border-b backdrop-blur-sm ${
+                isDarkMode 
+                  ? 'border-white/20 bg-zinc-900/90' 
+                  : 'border-amber-200/50 bg-white/90'
+              }`}>
+                <h2 className="text-xl font-medium" style={{ fontWeight: 500 }}>
+                  Clear Document
+                </h2>
+                <button
+                  onClick={() => setShowClearConfirm(false)}
+                  className={`p-2 rounded-full transition-colors ${
+                    isDarkMode 
+                      ? 'hover:bg-white/10 text-zinc-300/90 hover:text-zinc-200' 
+                      : 'hover:bg-amber-100 text-gray-600 hover:text-amber-900'
+                  }`}
+                >
+                  <XMarkIcon className="h-6 w-6" />
+                </button>
+              </div>
+
+              {/* Modal Content */}
+              <div className="flex-1 p-6" style={{ fontWeight: 500 }}>
+                <p className={`text-sm ${isDarkMode ? 'text-zinc-300' : 'text-gray-700'}`}>
+                  Are you sure you want to clear the loaded document? This action cannot be undone.
+                </p>
+              </div>
+
+              {/* Modal Footer */}
+              <div className={`flex-shrink-0 flex justify-end gap-3 p-6 border-t backdrop-blur-sm ${
+                isDarkMode 
+                  ? 'border-white/20 bg-zinc-900/90' 
+                  : 'border-amber-200/50 bg-white/90'
+              }`}>
+                <button
+                  onClick={() => setShowClearConfirm(false)}
+                  className={`px-6 py-3 rounded-full transition-colors shadow-sm ${
+                    isDarkMode 
+                      ? 'bg-white/10 hover:bg-white/20 text-zinc-200 border border-white/20' 
+                      : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200'
+                  }`}
+                  style={{ fontWeight: 500 }}
+                >
+                  No
+                </button>
+                <button
+                  onClick={handleClearDocument}
+                  className={`px-6 py-3 rounded-full transition-colors shadow-sm ${
+                    isDarkMode 
+                      ? 'bg-red-600 hover:bg-red-700 text-white' 
+                      : 'bg-red-600 hover:bg-red-700 text-white'
+                  }`}
+                  style={{ fontWeight: 500 }}
+                >
+                  Yes, Clear
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Help Modal */}
         {showHelp && (
