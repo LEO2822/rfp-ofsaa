@@ -27,19 +27,32 @@ print_error() {
 # Function to cleanup processes on exit
 cleanup() {
     print_warning "Shutting down services..."
+    
+    # Kill backend process and its children
     if [ ! -z "$BACKEND_PID" ]; then
+        pkill -P $BACKEND_PID 2>/dev/null
         kill $BACKEND_PID 2>/dev/null
+        wait $BACKEND_PID 2>/dev/null
         print_status "Backend stopped"
     fi
+    
+    # Kill frontend process and its children
     if [ ! -z "$FRONTEND_PID" ]; then
+        pkill -P $FRONTEND_PID 2>/dev/null
         kill $FRONTEND_PID 2>/dev/null
+        wait $FRONTEND_PID 2>/dev/null
         print_status "Frontend stopped"
     fi
+    
+    # Kill any remaining uvicorn or next processes
+    pkill -f "uvicorn" 2>/dev/null
+    pkill -f "next dev" 2>/dev/null
+    
     exit 0
 }
 
 # Set trap to cleanup on script exit
-trap cleanup SIGINT SIGTERM
+trap cleanup SIGINT SIGTERM EXIT
 
 # Get script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
