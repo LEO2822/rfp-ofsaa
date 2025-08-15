@@ -18,6 +18,7 @@ import {
 import MarkdownCanvas, { MarkdownCanvasRef } from "@/components/MarkdownCanvas";
 import DocumentDisplay from "@/components/DocumentDisplay";
 import UploadConfirmModal from "@/components/modals/UploadConfirmModal";
+import TypingIndicator from "@/components/TypingIndicator";
 
 // NOTE: This is a single-file React component meant to closely replicate the
 // provided screenshot, using Heroicons and Inter (Medium). Tailwind is used for
@@ -595,7 +596,9 @@ export default function ChatGPTReplica() {
             
             {/* Bottom composer - centered */}
             <div className="flex items-center justify-center pb-8 pt-8">
-              <div className="w-full max-w-[720px] px-4">
+              <div className={`w-full max-w-[720px] px-4 transition-all duration-300 ${
+                isGenerating ? 'transform scale-[1.02]' : ''
+              }`}>
                 <div className="flex flex-col gap-2">
                   {/* Selected text reference */}
                   {selectedTextReference && (
@@ -649,6 +652,13 @@ export default function ChatGPTReplica() {
                           ? 'border-white/40 bg-zinc-900/90' 
                           : 'border-amber-300/80 bg-white/95'
                         )
+                    } ${
+                      isGenerating 
+                        ? (isDarkMode 
+                          ? 'ring-2 ring-blue-500/20 shadow-blue-500/10' 
+                          : 'ring-2 ring-blue-400/30 shadow-blue-400/15'
+                        ) 
+                        : ''
                     }`}>
                       <button 
                         disabled={!documentContent.trim()}
@@ -806,7 +816,14 @@ export default function ChatGPTReplica() {
             </div>
 
             {/* Canvas body */}
-            <div className="flex-1 flex flex-col p-2 min-h-0 overflow-hidden">
+            <div className={`flex-1 flex flex-col p-2 min-h-0 overflow-hidden transition-all duration-500 ${
+              isGenerating 
+                ? (isDarkMode 
+                  ? 'ring-2 ring-blue-500/30 ring-inset animate-pulse' 
+                  : 'ring-2 ring-blue-400/40 ring-inset animate-pulse'
+                ) 
+                : ''
+            }`}>
               <MarkdownCanvas 
                 ref={canvasRef}
                 isDarkMode={isDarkMode}
@@ -816,6 +833,15 @@ export default function ChatGPTReplica() {
                   setCanRedo(canRedo);
                 }}
               />
+              
+              {/* Typing Indicator */}
+              {isGenerating && (
+                <div className={`border-t ${
+                  isDarkMode ? 'border-white/10' : 'border-gray-200'
+                }`}>
+                  <TypingIndicator isDarkMode={isDarkMode} />
+                </div>
+              )}
             </div>
           </div>
           )}
