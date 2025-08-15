@@ -816,7 +816,7 @@ export default function ChatGPTReplica() {
             </div>
 
             {/* Canvas body */}
-            <div className={`flex-1 flex flex-col p-2 min-h-0 overflow-hidden transition-all duration-500 ${
+            <div className={`relative flex-1 flex flex-col p-2 min-h-0 overflow-hidden transition-all duration-500 ${
               isGenerating 
                 ? (isDarkMode 
                   ? 'ring-2 ring-blue-500/30 ring-inset animate-pulse' 
@@ -834,13 +834,9 @@ export default function ChatGPTReplica() {
                 }}
               />
               
-              {/* Typing Indicator */}
+              {/* Centered Waveform Animation Overlay */}
               {isGenerating && (
-                <div className={`border-t ${
-                  isDarkMode ? 'border-white/10' : 'border-gray-200'
-                }`}>
-                  <TypingIndicator isDarkMode={isDarkMode} />
-                </div>
+                <TypingIndicator isDarkMode={isDarkMode} />
               )}
             </div>
           </div>
