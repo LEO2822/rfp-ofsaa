@@ -54,6 +54,8 @@ coverage.xml
 .mypy_cache/
 .dmypy.json
 dmypy.json
+*.pyc
+*.cpython-*
 
 # Node.js / Frontend
 node_modules/
