@@ -527,32 +527,56 @@ export default function ChatGPTReplica() {
                   
                   {/* Composer */}
                   <div className="flex items-center gap-2">
-                    <div className={`flex w-full items-center gap-3 rounded-full border px-4 py-3 ${
-                      isDarkMode 
-                        ? 'border-white/10 bg-white/[0.03]' 
-                        : 'border-amber-200/50 bg-[#FFF8F0]'
+                    <div className={`flex w-full items-center gap-3 rounded-full border px-4 py-3 transition-all backdrop-blur-xl shadow-lg ${
+                      !documentContent.trim() 
+                        ? (isDarkMode 
+                          ? 'border-white/30 bg-zinc-900/80 opacity-70' 
+                          : 'border-amber-300/60 bg-white/85 opacity-70'
+                        )
+                        : (isDarkMode 
+                          ? 'border-white/40 bg-zinc-900/90' 
+                          : 'border-amber-300/80 bg-white/95'
+                        )
                     }`}>
-                      <button className={`transition-colors ${
-                        isDarkMode 
-                          ? 'text-zinc-300/90 hover:text-zinc-200' 
-                          : 'text-gray-600 hover:text-gray-800'
-                      }`}>
+                      <button 
+                        disabled={!documentContent.trim()}
+                        className={`transition-colors ${
+                          !documentContent.trim()
+                            ? 'text-zinc-500/50 cursor-not-allowed'
+                            : (isDarkMode 
+                              ? 'text-zinc-300/90 hover:text-zinc-200' 
+                              : 'text-gray-600 hover:text-gray-800'
+                            )
+                        }`}
+                      >
                         <PlusIcon className="h-5 w-5" />
                       </button>
                       <input
+                        disabled={!documentContent.trim()}
                         className={`w-full bg-transparent text-[15px] focus:outline-none ${
+                          !documentContent.trim()
+                            ? 'cursor-not-allowed'
+                            : ''
+                        } ${
                           isDarkMode 
                             ? 'text-zinc-200 placeholder:text-zinc-400/70' 
                             : 'text-gray-900 placeholder:text-gray-500'
                         }`}
-                        placeholder="Ask or Make changes"
+                        placeholder={!documentContent.trim() ? "Upload a document first to start chatting" : "Ask or Make changes"}
+                        style={{ fontWeight: 500 }}
                       />
                       {/* Right actions */}
-                      <button className={`transition-colors ${
-                        isDarkMode 
-                          ? 'text-zinc-300/90 hover:text-zinc-200' 
-                          : 'text-gray-600 hover:text-gray-800'
-                      }`}>
+                      <button 
+                        disabled={!documentContent.trim()}
+                        className={`transition-colors ${
+                          !documentContent.trim()
+                            ? 'text-zinc-500/50 cursor-not-allowed'
+                            : (isDarkMode 
+                              ? 'text-zinc-300/90 hover:text-zinc-200' 
+                              : 'text-gray-600 hover:text-gray-800'
+                            )
+                        }`}
+                      >
                         <ArrowRightCircleIcon className="h-5 w-5" />
                       </button>
                     </div>
