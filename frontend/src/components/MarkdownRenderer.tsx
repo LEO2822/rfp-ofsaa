@@ -165,17 +165,17 @@ export default function MarkdownRenderer({ content, isDarkMode }: MarkdownRender
       </p>
     ),
     ul: ({ children, ...props }) => (
-      <ul className="list-disc list-inside mb-4 space-y-1" {...props}>
+      <ul className="list-disc list-outside mb-4 space-y-2 pl-6" {...props}>
         {children}
       </ul>
     ),
     ol: ({ children, ...props }) => (
-      <ol className="list-decimal list-inside mb-4 space-y-1" {...props}>
+      <ol className="list-decimal list-outside mb-4 space-y-2 pl-6" {...props}>
         {children}
       </ol>
     ),
     li: ({ children, ...props }) => (
-      <li className={isDarkMode ? 'text-zinc-300' : 'text-gray-700'} {...props}>
+      <li className={`${isDarkMode ? 'text-zinc-300' : 'text-gray-700'} leading-relaxed`} {...props}>
         {children}
       </li>
     ),
