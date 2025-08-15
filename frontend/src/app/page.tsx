@@ -40,6 +40,8 @@ export default function ChatGPTReplica() {
   const [textToMoveToCanvas, setTextToMoveToCanvas] = useState<string>("");
   const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [showUploadConfirm, setShowUploadConfirm] = useState(false);
+  const [chatQuery, setChatQuery] = useState<string>("");
+  const [isGenerating, setIsGenerating] = useState(false);
   interface HistoryEntry {
     value: string;
     timestamp: number;
@@ -50,6 +52,7 @@ export default function ChatGPTReplica() {
   const [canRedo, setCanRedo] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const chatInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<MarkdownCanvasRef>(null);
 
   // Handle escape key to close modals and keyboard shortcuts
@@ -204,6 +207,12 @@ export default function ChatGPTReplica() {
   // Handle text selection actions
   const handleAskWrite = (selectedText: string) => {
     setSelectedTextReference(selectedText);
+    // Focus the chat input
+    setTimeout(() => {
+      if (chatInputRef.current) {
+        chatInputRef.current.focus();
+      }
+    }, 100);
   };
 
   const handleMoveToCanvas = (selectedText: string, markdownText?: string) => {
@@ -225,6 +234,109 @@ export default function ChatGPTReplica() {
       return () => clearTimeout(timer);
     }
   }, [textToMoveToCanvas]);
+
+  // Handle chat submission
+  const handleChatSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    
+    if (!chatQuery.trim() || !documentContent.trim() || isGenerating) {
+      return;
+    }
+
+    console.log('Starting chat submission:', { query: chatQuery, context: selectedTextReference });
+    
+    setIsGenerating(true);
+    const currentQuery = chatQuery;
+    const currentContext = selectedTextReference;
+    setChatQuery("");
+    setSelectedTextReference("");
+
+    try {
+      const response = await fetch('http://localhost:8000/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: currentQuery,
+          context: currentContext,
+          canvas_content: canvasRef.current?.getHistory().slice(-1)[0]?.value || ""
+        })
+      });
+
+      console.log('Response status:', response.status);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Response error:', errorText);
+        throw new Error(`Server error: ${response.status}`);
+      }
+
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error('No response stream');
+      }
+
+      let accumulatedResponse = "";
+      const decoder = new TextDecoder();
+
+      console.log('Starting to read stream...');
+      
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+          console.log('Stream finished');
+          break;
+        }
+        
+        const chunk = decoder.decode(value);
+        const lines = chunk.split('\n');
+        
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = line.slice(6);
+            if (data === '[DONE]') {
+              console.log('Received [DONE] signal');
+              break;
+            }
+            try {
+              const parsed = JSON.parse(data);
+              if (parsed.error) {
+                console.error('Stream error:', parsed.error);
+                throw new Error(parsed.error);
+              }
+              if (parsed.content) {
+                accumulatedResponse += parsed.content;
+                console.log('Accumulated response length:', accumulatedResponse.length);
+              }
+            } catch (err) {
+              console.error('Error parsing chunk:', err, 'Data:', data);
+            }
+          }
+        }
+      }
+
+      console.log('Final accumulated response:', accumulatedResponse);
+      
+      // Add response to canvas
+      if (accumulatedResponse.trim()) {
+        setTextToMoveToCanvas(accumulatedResponse);
+        console.log('Added response to canvas');
+      } else {
+        console.warn('No response content to add to canvas');
+        setTextToMoveToCanvas("**No response generated. Please try again.**");
+      }
+
+    } catch (error) {
+      console.error('Chat submission error:', error);
+      // Show error message to user
+      const errorMessage = `**Error:** ${error instanceof Error ? error.message : 'Failed to get response from AI. Please try again.'}`;
+      setTextToMoveToCanvas(errorMessage);
+    } finally {
+      setIsGenerating(false);
+      console.log('Chat submission finished');
+    }
+  };
 
   return (
     <div
@@ -551,25 +663,32 @@ export default function ChatGPTReplica() {
                       >
                         <PlusIcon className="h-5 w-5" />
                       </button>
-                      <input
-                        disabled={!documentContent.trim()}
-                        className={`w-full bg-transparent text-[15px] focus:outline-none ${
-                          !documentContent.trim()
-                            ? 'cursor-not-allowed'
-                            : ''
-                        } ${
-                          isDarkMode 
-                            ? 'text-zinc-200 placeholder:text-zinc-400/70' 
-                            : 'text-gray-900 placeholder:text-gray-500'
-                        }`}
-                        placeholder={!documentContent.trim() ? "Upload a document first to start chatting" : "Ask or Make changes"}
-                        style={{ fontWeight: 500 }}
-                      />
+                      <form onSubmit={handleChatSubmit} className="w-full">
+                        <input
+                          ref={chatInputRef}
+                          value={chatQuery}
+                          onChange={(e) => setChatQuery(e.target.value)}
+                          disabled={!documentContent.trim() || isGenerating}
+                          className={`w-full bg-transparent text-[15px] focus:outline-none ${
+                            !documentContent.trim() || isGenerating
+                              ? 'cursor-not-allowed'
+                              : ''
+                          } ${
+                            isDarkMode 
+                              ? 'text-zinc-200 placeholder:text-zinc-400/70' 
+                              : 'text-gray-900 placeholder:text-gray-500'
+                          }`}
+                          placeholder={!documentContent.trim() ? "Upload a document first to start chatting" : (isGenerating ? "Generating response..." : "Ask or Make changes")}
+                          style={{ fontWeight: 500 }}
+                        />
+                      </form>
                       {/* Right actions */}
                       <button 
-                        disabled={!documentContent.trim()}
+                        type="button"
+                        onClick={handleChatSubmit}
+                        disabled={!documentContent.trim() || !chatQuery.trim() || isGenerating}
                         className={`transition-colors ${
-                          !documentContent.trim()
+                          !documentContent.trim() || !chatQuery.trim() || isGenerating
                             ? 'text-zinc-500/50 cursor-not-allowed'
                             : (isDarkMode 
                               ? 'text-zinc-300/90 hover:text-zinc-200' 
