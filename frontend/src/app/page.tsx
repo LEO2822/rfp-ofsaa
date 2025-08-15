@@ -17,6 +17,7 @@ import {
 } from "@heroicons/react/24/outline";
 import MarkdownCanvas, { MarkdownCanvasRef } from "@/components/MarkdownCanvas";
 import DocumentDisplay from "@/components/DocumentDisplay";
+import UploadConfirmModal from "@/components/modals/UploadConfirmModal";
 
 // NOTE: This is a single-file React component meant to closely replicate the
 // provided screenshot, using Heroicons and Inter (Medium). Tailwind is used for
@@ -38,6 +39,7 @@ export default function ChatGPTReplica() {
   const [selectedTextReference, setSelectedTextReference] = useState<string>("");
   const [textToMoveToCanvas, setTextToMoveToCanvas] = useState<string>("");
   const [showVersionHistory, setShowVersionHistory] = useState(false);
+  const [showUploadConfirm, setShowUploadConfirm] = useState(false);
   interface HistoryEntry {
     value: string;
     timestamp: number;
@@ -61,6 +63,8 @@ export default function ChatGPTReplica() {
           setShowClearConfirm(false);
         } else if (showVersionHistory) {
           setShowVersionHistory(false);
+        } else if (showUploadConfirm) {
+          setShowUploadConfirm(false);
         }
       }
       
@@ -77,7 +81,7 @@ export default function ChatGPTReplica() {
       }
     };
 
-    if (showHelp || showClearConfirm || showVersionHistory) {
+    if (showHelp || showClearConfirm || showVersionHistory || showUploadConfirm) {
       document.addEventListener('keydown', handleKeyboard);
       // Prevent background scrolling when modal is open
       document.body.style.overflow = 'hidden';
@@ -88,11 +92,11 @@ export default function ChatGPTReplica() {
 
     return () => {
       document.removeEventListener('keydown', handleKeyboard);
-      if (!showHelp && !showClearConfirm && !showVersionHistory) {
+      if (!showHelp && !showClearConfirm && !showVersionHistory && !showUploadConfirm) {
         document.body.style.overflow = 'unset';
       }
     };
-  }, [showHelp, showClearConfirm, showVersionHistory]);
+  }, [showHelp, showClearConfirm, showVersionHistory, showUploadConfirm]);
 
   // Focus input when editing starts
   useEffect(() => {
@@ -142,6 +146,16 @@ export default function ChatGPTReplica() {
 
   // Handle file upload
   const handleFileSelect = () => {
+    // Check if there's already content loaded
+    if (documentContent.trim()) {
+      setShowUploadConfirm(true);
+    } else {
+      fileInputRef.current?.click();
+    }
+  };
+
+  const handleConfirmedUpload = () => {
+    setShowUploadConfirm(false);
     fileInputRef.current?.click();
   };
 
@@ -167,6 +181,9 @@ export default function ChatGPTReplica() {
       const result = await response.json();
       setDocumentContent(result.content);
       setDocumentFilename(result.filename);
+      
+      // Clear any selected text reference from previous file
+      setSelectedTextReference("");
       
     } catch (error) {
       console.error('Error uploading file:', error);
@@ -732,6 +749,15 @@ export default function ChatGPTReplica() {
             </div>
           </div>
         )}
+
+        {/* Upload Confirmation Modal */}
+        <UploadConfirmModal
+          isOpen={showUploadConfirm}
+          onClose={() => setShowUploadConfirm(false)}
+          onConfirm={handleConfirmedUpload}
+          isDarkMode={isDarkMode}
+          currentFileName={documentFilename}
+        />
 
         {/* Clear Confirmation Modal */}
         {showClearConfirm && (
