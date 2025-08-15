@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import TurndownService from 'turndown';
+import { FONT_STYLES, TIMING, SPACING } from '@/constants/theme';
 
 interface TextSelectionToolbarProps {
   isDarkMode: boolean;
@@ -100,14 +101,14 @@ export default function TextSelectionToolbar({
       
       if (containerRect) {
         const toolbarX = rect.left + (rect.width / 2) - containerRect.left;
-        const toolbarY = rect.top - containerRect.top - 50; // 50px above selection
+        const toolbarY = rect.top - containerRect.top - SPACING.toolbarOffset; // offset above selection
         
         setToolbarPosition({ x: toolbarX, y: Math.max(0, toolbarY) });
         
-        // Add 1 second delay before showing toolbar
+        // Add delay before showing toolbar
         delayTimeoutRef.current = setTimeout(() => {
           setShowToolbar(true);
-        }, 1000);
+        }, TIMING.delay.toolbarShow);
       }
     };
 
@@ -194,8 +195,8 @@ export default function TextSelectionToolbar({
             left: `${toolbarPosition.x}px`,
             top: `${toolbarPosition.y}px`,
             transform: 'translateX(-50%)',
-            fontFamily: "'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial",
-            fontWeight: 500,
+            fontFamily: FONT_STYLES.fontFamily,
+            fontWeight: FONT_STYLES.fontWeight.medium,
           }}
         >
           <button
@@ -205,7 +206,7 @@ export default function TextSelectionToolbar({
                 ? 'bg-white/10 hover:bg-white/20 text-zinc-200 border border-white/20 shadow-white/10' 
                 : 'bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-200/50 shadow-amber-200/30'
             }`}
-            style={{ fontWeight: 500 }}
+            style={{ fontWeight: FONT_STYLES.fontWeight.medium }}
           >
             Ask/write
           </button>
@@ -217,7 +218,7 @@ export default function TextSelectionToolbar({
                 ? 'bg-white/10 hover:bg-white/20 text-zinc-200 border border-white/20 shadow-white/10' 
                 : 'bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-200/50 shadow-amber-200/30'
             }`}
-            style={{ fontWeight: 500 }}
+            style={{ fontWeight: FONT_STYLES.fontWeight.medium }}
           >
             Move to canvas
           </button>

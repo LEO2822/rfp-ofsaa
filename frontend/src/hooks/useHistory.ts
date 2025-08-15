@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from 'react';
+import { SPACING, TIMING } from '@/constants/theme';
 
 interface HistoryState<T> {
   value: T;
@@ -18,7 +19,7 @@ interface HistoryEntry<T> {
   id: string;
 }
 
-export function useHistory<T>(initialValue: T, maxHistory: number = 50): HistoryState<T> {
+export function useHistory<T>(initialValue: T, maxHistory: number = SPACING.maxHistory): HistoryState<T> {
   const [history, setHistory] = useState<HistoryEntry<T>[]>([
     {
       value: initialValue,
@@ -79,7 +80,7 @@ export function useHistory<T>(initialValue: T, maxHistory: number = 50): History
         }
         return Math.min(prev + 1, maxHistory - 1);
       });
-    }, 500);
+    }, TIMING.debounce.save);
   }, [currentIndex, history, maxHistory]);
 
   const undo = useCallback(() => {
