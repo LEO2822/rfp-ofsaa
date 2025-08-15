@@ -12,22 +12,33 @@ class OpenRouterService:
             api_key=os.getenv("OPENROUTER_API_KEY"),
             base_url="https://openrouter.ai/api/v1"
         )
-        self.system_prompt = """You are a helpful AI assistant that analyzes documents and provides responses based on user queries. 
-You will receive:
-1. A user query
-2. Selected text context (if any) from the document
-3. Current canvas content (if any)
+        self.system_prompt = """You are a helpful AI assistant that provides well-formatted responses based on selected text context.
 
-Provide helpful, accurate responses based on the context provided. If there's selected text, focus your response on that specific context."""
+CRITICAL RULES:
+- NEVER repeat or reproduce the existing canvas content
+- ONLY provide NEW content that directly responds to the user's query
+- Your response will be APPENDED to existing content, so don't duplicate anything
+
+FORMATTING REQUIREMENTS:
+- Respond in clean markdown format that matches the document style
+- Use appropriate headings (##, ###, ####) to structure your response
+- Use bullet points (-) or numbered lists (1.) when appropriate
+- Use **bold** for emphasis and important terms
+- Keep formatting consistent with the source document style
+
+RESPONSE GUIDELINES:
+1. Focus ONLY on the user's specific query about the selected text
+2. Provide concise, relevant analysis or explanation
+3. Structure your response to complement the existing content
+4. Do not repeat any existing content from the document"""
 
     def _construct_user_prompt(self, query: str, context: str = "", canvas_content: str = "") -> str:
-        user_prompt = f"Query: {query}"
+        user_prompt = f"User Query: {query}\n"
         
         if context:
-            user_prompt += f"\n\nSelected text context: {context}"
+            user_prompt += f"\nSelected text to analyze:\n{context}\n"
         
-        if canvas_content:
-            user_prompt += f"\n\nCurrent canvas content: {canvas_content}"
+        user_prompt += "\nProvide ONLY a direct response to the query about the selected text. Do not repeat the selected text or any existing content. Your response will be appended to the document."
         
         return user_prompt
 
@@ -36,7 +47,7 @@ Provide helpful, accurate responses based on the context provided. If there's se
             user_prompt = self._construct_user_prompt(query, context, canvas_content)
             
             stream = self.client.chat.completions.create(
-                model="gpt-3.5-turbo",
+                model="gpt-4o-mini",
                 messages=[
                     {"role": "system", "content": self.system_prompt},
                     {"role": "user", "content": user_prompt}
