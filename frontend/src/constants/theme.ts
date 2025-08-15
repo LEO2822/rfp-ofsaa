@@ -71,7 +71,7 @@ export const TIMING = {
   },
   delay: {
     toolbarShow: 1000,
-    autoPreview: 1500,
+    autoPreview: 5000,
   }
 } as const;
 

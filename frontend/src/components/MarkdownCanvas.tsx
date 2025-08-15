@@ -30,8 +30,9 @@ const MarkdownCanvas = forwardRef<MarkdownCanvasRef, MarkdownCanvasProps>(
   ({ isDarkMode, selectedTextToAdd, onStateChange }, ref) => {
   const history = useHistory<string>("");
   const [isEditMode, setIsEditMode] = useState<boolean>(true);
+  const [localText, setLocalText] = useState<string>("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const autoPreviewTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   useImperativeHandle(ref, () => ({
     undo: history.undo,
@@ -41,7 +42,12 @@ const MarkdownCanvas = forwardRef<MarkdownCanvasRef, MarkdownCanvasProps>(
     getHistory: history.getHistory,
     goToVersion: history.goToVersion
   }));
-  
+
+  // Sync localText with history value (on mount and history changes)
+  useEffect(() => {
+    setLocalText(history.value);
+  }, [history.value]);
+
   // Notify parent of state changes
   useEffect(() => {
     onStateChange?.(history.canUndo, history.canRedo);
@@ -49,16 +55,17 @@ const MarkdownCanvas = forwardRef<MarkdownCanvasRef, MarkdownCanvasProps>(
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value;
-    history.set(text);
+    setLocalText(text);
     
     // Clear previous timeout
-    if (debounceTimeoutRef.current) {
-      clearTimeout(debounceTimeoutRef.current);
+    if (autoPreviewTimeoutRef.current) {
+      clearTimeout(autoPreviewTimeoutRef.current);
     }
     
-    // Only switch to preview mode after user stops typing
+    // After 5 seconds of inactivity: save to history AND switch to preview
     if (text.trim()) {
-      debounceTimeoutRef.current = setTimeout(() => {
+      autoPreviewTimeoutRef.current = setTimeout(() => {
+        history.set(text);
         setIsEditMode(false);
       }, TIMING.delay.autoPreview);
     }
@@ -66,32 +73,36 @@ const MarkdownCanvas = forwardRef<MarkdownCanvasRef, MarkdownCanvasProps>(
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     // Press Escape to preview immediately
-    if (e.key === 'Escape' && history.value.trim()) {
+    if (e.key === 'Escape' && localText.trim()) {
       e.preventDefault();
-      if (debounceTimeoutRef.current) {
-        clearTimeout(debounceTimeoutRef.current);
+      if (autoPreviewTimeoutRef.current) {
+        clearTimeout(autoPreviewTimeoutRef.current);
       }
+      history.set(localText);
       setIsEditMode(false);
     }
     // Press Ctrl/Cmd + Enter to preview immediately (keep Tab for normal tab behavior)
-    else if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && history.value.trim()) {
+    else if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && localText.trim()) {
       e.preventDefault();
-      if (debounceTimeoutRef.current) {
-        clearTimeout(debounceTimeoutRef.current);
+      if (autoPreviewTimeoutRef.current) {
+        clearTimeout(autoPreviewTimeoutRef.current);
       }
+      history.set(localText);
       setIsEditMode(false);
     }
     // Let Enter key work normally for new lines - don't prevent default
-  }, [history.value]);
+  }, [localText, history]);
 
   const handlePaste = useCallback((e: React.ClipboardEvent<HTMLTextAreaElement>) => {
     const text = e.clipboardData.getData("text/plain");
     if (text && text.trim().length > 0) {
-      history.set(text);
+      setLocalText(text);
       // Clear any pending timeout
-      if (debounceTimeoutRef.current) {
-        clearTimeout(debounceTimeoutRef.current);
+      if (autoPreviewTimeoutRef.current) {
+        clearTimeout(autoPreviewTimeoutRef.current);
       }
+      // Update history immediately for paste
+      history.set(text);
       // Show preview immediately for pasted content
       setTimeout(() => {
         setIsEditMode(false);
@@ -102,16 +113,18 @@ const MarkdownCanvas = forwardRef<MarkdownCanvasRef, MarkdownCanvasProps>(
   const handleClick = useCallback(() => {
     // Switch to edit mode when clicked
     setIsEditMode(true);
+    // Sync localText with current history value
+    setLocalText(history.value);
     // Clear any pending timeout
-    if (debounceTimeoutRef.current) {
-      clearTimeout(debounceTimeoutRef.current);
+    if (autoPreviewTimeoutRef.current) {
+      clearTimeout(autoPreviewTimeoutRef.current);
     }
     setTimeout(() => {
       if (textareaRef.current) {
         textareaRef.current.focus();
       }
     }, 0);
-  }, []);
+  }, [history.value]);
 
   useEffect(() => {
     // Focus textarea when in edit mode
@@ -127,6 +140,9 @@ const MarkdownCanvas = forwardRef<MarkdownCanvasRef, MarkdownCanvasProps>(
       
       const separator = history.value.trim() ? '\n\n' : '';
       const newContent = history.value + separator + textToAdd;
+      
+      // Update both local text and history
+      setLocalText(newContent);
       history.set(newContent);
       
       // Focus the textarea after updating content
@@ -142,8 +158,8 @@ const MarkdownCanvas = forwardRef<MarkdownCanvasRef, MarkdownCanvasProps>(
       setIsEditMode(true);
       
       // Clear any pending timeout
-      if (debounceTimeoutRef.current) {
-        clearTimeout(debounceTimeoutRef.current);
+      if (autoPreviewTimeoutRef.current) {
+        clearTimeout(autoPreviewTimeoutRef.current);
       }
       
       // Automatically switch to preview mode after adding text
@@ -156,8 +172,8 @@ const MarkdownCanvas = forwardRef<MarkdownCanvasRef, MarkdownCanvasProps>(
   // Clean up timeout on unmount
   useEffect(() => {
     return () => {
-      if (debounceTimeoutRef.current) {
-        clearTimeout(debounceTimeoutRef.current);
+      if (autoPreviewTimeoutRef.current) {
+        clearTimeout(autoPreviewTimeoutRef.current);
       }
     };
   }, []);
@@ -197,7 +213,7 @@ const MarkdownCanvas = forwardRef<MarkdownCanvasRef, MarkdownCanvasProps>(
   return (
     <textarea
       ref={textareaRef}
-      value={history.value}
+      value={localText}
       onChange={handleChange}
       onKeyDown={handleKeyDown}
       onPaste={handlePaste}
