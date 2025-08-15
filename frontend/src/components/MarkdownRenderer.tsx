@@ -29,28 +29,20 @@ export default function MarkdownRenderer({ content, isDarkMode }: MarkdownRender
         {children}
       </a>
     ),
-    img: ({ src, alt, ...props }) => {
+    img: ({ src, alt }) => {
       if (!src) return null;
-      if (typeof src === 'string' && (src.startsWith('http') || src.startsWith('/'))) {
-        return (
-          <Image
-            src={src}
-            alt={alt || ""}
-            width={800}
-            height={600}
-            className="max-w-full h-auto rounded-md"
-            style={{ width: 'auto', height: 'auto' }}
-            unoptimized
-          />
-        );
-      }
+      const imageSrc = typeof src === 'string' ? src : '';
+      
+      // Use Next.js Image for all cases with proper configuration
       return (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={typeof src === 'string' ? src : ''}
+        <Image
+          src={imageSrc}
           alt={alt || ""}
+          width={800}
+          height={600}
           className="max-w-full h-auto rounded-md"
-          {...props}
+          style={{ width: 'auto', height: 'auto' }}
+          unoptimized
         />
       );
     },
