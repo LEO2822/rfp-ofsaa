@@ -127,3 +127,5 @@ logs/
 # Claude AI files
 CLAUDE.md
 .claude/
+
+.playwright-mcp/
