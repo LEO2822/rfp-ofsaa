@@ -240,6 +240,11 @@ export default function ChatGPTReplica() {
   const handleChatSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     
+    // Automatically restore canvas if minimized when user submits
+    if (isCanvasMinimized) {
+      setIsCanvasMinimized(false);
+    }
+    
     if (!chatQuery.trim() || !documentContent.trim() || isGenerating) {
       return;
     }
