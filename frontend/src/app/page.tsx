@@ -189,6 +189,9 @@ export default function ChatGPTReplica() {
       // Clear any selected text reference from previous file
       setSelectedTextReference("");
       
+      // Clear canvas content when new file is uploaded
+      canvasRef.current?.reset();
+      
     } catch (error) {
       console.error('Error uploading file:', error);
       alert('Failed to upload and convert document. Please try again.');

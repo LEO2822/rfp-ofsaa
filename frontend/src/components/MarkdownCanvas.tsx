@@ -24,6 +24,7 @@ export interface MarkdownCanvasRef {
   canRedo: boolean;
   getHistory: () => HistoryEntry[];
   goToVersion: (index: number) => void;
+  reset: () => void;
 }
 
 const MarkdownCanvas = forwardRef<MarkdownCanvasRef, MarkdownCanvasProps>(
@@ -40,7 +41,15 @@ const MarkdownCanvas = forwardRef<MarkdownCanvasRef, MarkdownCanvasProps>(
     canUndo: history.canUndo,
     canRedo: history.canRedo,
     getHistory: history.getHistory,
-    goToVersion: history.goToVersion
+    goToVersion: history.goToVersion,
+    reset: () => {
+      history.reset();
+      setLocalText("");
+      setIsEditMode(true);
+      if (autoPreviewTimeoutRef.current) {
+        clearTimeout(autoPreviewTimeoutRef.current);
+      }
+    }
   }));
 
   // Sync localText with history value (on mount and history changes)
@@ -94,21 +103,45 @@ const MarkdownCanvas = forwardRef<MarkdownCanvasRef, MarkdownCanvasProps>(
   }, [localText, history]);
 
   const handlePaste = useCallback((e: React.ClipboardEvent<HTMLTextAreaElement>) => {
-    const text = e.clipboardData.getData("text/plain");
-    if (text && text.trim().length > 0) {
-      setLocalText(text);
-      // Clear any pending timeout
-      if (autoPreviewTimeoutRef.current) {
-        clearTimeout(autoPreviewTimeoutRef.current);
+    const pastedText = e.clipboardData.getData("text/plain");
+    if (pastedText && pastedText.trim().length > 0) {
+      const textarea = textareaRef.current;
+      if (textarea) {
+        const startPos = textarea.selectionStart;
+        const endPos = textarea.selectionEnd;
+        const currentText = localText;
+        
+        // Insert pasted text at cursor position, replacing any selected text
+        const newText = currentText.substring(0, startPos) + pastedText + currentText.substring(endPos);
+        
+        setLocalText(newText);
+        
+        // Clear any pending timeout
+        if (autoPreviewTimeoutRef.current) {
+          clearTimeout(autoPreviewTimeoutRef.current);
+        }
+        
+        // Update history immediately for paste
+        history.set(newText);
+        
+        // Set cursor position after the pasted text
+        setTimeout(() => {
+          if (textarea) {
+            const newCursorPos = startPos + pastedText.length;
+            textarea.setSelectionRange(newCursorPos, newCursorPos);
+            textarea.focus();
+          }
+        }, 0);
+        
+        // Show preview after pasting large content
+        if (pastedText.length > 100) {
+          setTimeout(() => {
+            setIsEditMode(false);
+          }, TIMING.animation.fast);
+        }
       }
-      // Update history immediately for paste
-      history.set(text);
-      // Show preview immediately for pasted content
-      setTimeout(() => {
-        setIsEditMode(false);
-      }, TIMING.animation.fast);
     }
-  }, [history]);
+  }, [history, localText]);
 
   const handleClick = useCallback(() => {
     // Switch to edit mode when clicked

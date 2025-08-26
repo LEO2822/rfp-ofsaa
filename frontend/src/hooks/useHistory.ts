@@ -30,7 +30,7 @@ export function useHistory<T>(initialValue: T, maxHistory: number = SPACING.maxH
   const [currentIndex, setCurrentIndex] = useState(0);
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const value = history[currentIndex].value;
+  const value = history[currentIndex]?.value ?? initialValue;
   const canUndo = currentIndex > 0;
   const canRedo = currentIndex < history.length - 1;
 
