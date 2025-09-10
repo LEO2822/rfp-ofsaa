@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import "github-markdown-css/github-markdown.css";
+import "highlight.js/styles/github.css";
 
 const inter = Inter({
-  weight: "500",
-  subsets: ["latin"],
   variable: "--font-inter",
+  subsets: ["latin"],
+  weight: ["500"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
@@ -20,7 +27,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-inter antialiased`}>
+      <body
+        className={`${inter.variable} ${geistMono.variable} antialiased`}
+      >
         {children}
       </body>
     </html>
