@@ -7,9 +7,18 @@ requires-python = "==3.13.5"
 dependencies = [
     "docling>=2.44.0",
     "fastapi>=0.116.1",
+    "loguru>=0.7.2",
+    "mcp>=1.13.1",
+    "mcp-client>=0.0.0",
     "openai>=1.99.9",
+    "openpyxl>=3.1.5",
+    "pandas>=2.3.1",
+    "pytest>=8.4.2",
+    "python-docx>=1.2.0",
     "python-dotenv>=1.1.1",
     "python-multipart>=0.0.20",
+    "qdrant-client>=1.15.1",
+    "sentence-transformers>=5.1.0",
     "uvicorn>=0.35.0",
 ]
 

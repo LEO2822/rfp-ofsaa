@@ -25,6 +25,7 @@ export interface MarkdownCanvasRef {
   getHistory: () => HistoryEntry[];
   goToVersion: (index: number) => void;
   reset: () => void;
+  getContent: () => string;
 }
 
 const MarkdownCanvas = forwardRef<MarkdownCanvasRef, MarkdownCanvasProps>(
@@ -42,6 +43,7 @@ const MarkdownCanvas = forwardRef<MarkdownCanvasRef, MarkdownCanvasProps>(
     canRedo: history.canRedo,
     getHistory: history.getHistory,
     goToVersion: history.goToVersion,
+    getContent: () => localText,
     reset: () => {
       history.reset();
       setLocalText("");

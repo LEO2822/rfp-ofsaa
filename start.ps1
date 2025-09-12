@@ -90,7 +90,7 @@ Prerequisites:
 
 The script will:
 1. Start the FastAPI backend on http://localhost:8000
-2. Start the Next.js frontend on http://localhost:3000
+2. Start the Next.js frontend on http://localhost:3001
 3. Wait for user input to keep services running
 4. Clean up processes when stopped
 
@@ -134,7 +134,7 @@ try {
     # Start Frontend
     Write-Status "Starting Next.js Frontend..."
     Set-Location -Path "frontend"
-    $Global:FrontendProcess = Start-Process -FilePath "bun" -ArgumentList @("run", "dev") -PassThru -NoNewWindow
+    $Global:FrontendProcess = Start-Process -FilePath "bun" -ArgumentList @("run", "dev", "--", "--port", "3001") -PassThru -NoNewWindow
     Set-Location -Path ".."
     
     # Wait for frontend to start
@@ -143,7 +143,7 @@ try {
     # Check if frontend is running
     if (!$Global:FrontendProcess.HasExited) {
         Write-Success "Frontend started successfully (PID: $($Global:FrontendProcess.Id))"
-        Write-Status "Frontend running at: http://localhost:3000"
+        Write-Status "Frontend running at: http://localhost:3001"
     } else {
         Write-Error "Failed to start frontend"
         Stop-Services
@@ -154,7 +154,7 @@ try {
     Write-Success "All services started successfully!"
     Write-Host ""
     Write-Status "🚀 Application URLs:"
-    Write-Status "   Frontend: http://localhost:3000"
+    Write-Status "   Frontend: http://localhost:3001"
     Write-Status "   Backend API: http://localhost:8000"
     Write-Status "   API Docs: http://localhost:8000/docs"
     Write-Host ""

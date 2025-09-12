@@ -92,7 +92,7 @@ fi
 # Start Frontend
 print_status "Starting Next.js Frontend..."
 cd frontend
-bun run dev &
+bun run dev -- --port 3001 &
 FRONTEND_PID=$!
 cd ..
 
@@ -102,7 +102,7 @@ sleep 5
 # Check if frontend is running
 if kill -0 $FRONTEND_PID 2>/dev/null; then
     print_success "Frontend started successfully (PID: $FRONTEND_PID)"
-    print_status "Frontend running at: http://localhost:3000"
+    print_status "Frontend running at: http://localhost:3001"
 else
     print_error "Failed to start frontend"
     kill $BACKEND_PID 2>/dev/null
@@ -113,7 +113,7 @@ echo "================================="
 print_success "All services started successfully!"
 echo ""
 print_status "🚀 Application URLs:"
-print_status "   Frontend: http://localhost:3000"
+print_status "   Frontend: http://localhost:3001"
 print_status "   Backend API: http://localhost:8000"
 print_status "   API Docs: http://localhost:8000/docs"
 echo ""

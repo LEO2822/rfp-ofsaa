@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { MagnifyingGlassIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
 
 export default function DesignSystemPage() {
   const [activeTab, setActiveTab] = useState('colors')
@@ -10,8 +11,8 @@ export default function DesignSystemPage() {
       {/* Header */}
       <header className="border-b border-gray-200" style={{ backgroundColor: '#f8f6f0' }}>
         <div className="px-8 py-6">
-          <h1 className="text-4xl font-bold text-black mb-2">
-            Fontshare Design System
+          <h1 className="heading-1 mb-2">
+            SENSAI Design System
           </h1>
           <p className="text-lg text-gray-600">
             Complete style guide and component library
@@ -36,8 +37,8 @@ export default function DesignSystemPage() {
                     onClick={() => setActiveTab(item.id)}
                     className={`w-full text-left px-4 py-2 text-sm font-medium rounded transition-colors ${
                       activeTab === item.id
-                        ? 'bg-black text-white'
-                        : 'text-black hover:bg-black/5'
+                        ? 'bg-blue-600 text-white'
+                        : 'text-blue-600 hover:bg-blue-600/5'
                     }`}
                   >
                     {item.label}
@@ -85,7 +86,7 @@ function ColorsSection() {
       name: 'Pure Black',
       hex: '#000000',
       usage: 'Primary text, accent elements, active states',
-      className: 'bg-black'
+      className: 'bg-blue-600'
     },
     {
       name: 'Gray 600',
@@ -115,7 +116,7 @@ function ColorsSection() {
 
   return (
     <div>
-      <h2 className="text-3xl font-bold text-black mb-6">Color Palette</h2>
+      <h2 className="text-3xl font-bold text-blue-600 mb-6">Color Palette</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {colors.map((color, index) => (
           <div key={index} className="bg-white rounded-lg border border-gray-200 overflow-hidden">
@@ -124,7 +125,7 @@ function ColorsSection() {
               style={{ backgroundColor: color.hex }}
             ></div>
             <div className="p-4">
-              <h3 className="font-semibold text-black mb-1">{color.name}</h3>
+              <h3 className="font-semibold text-blue-600 mb-1">{color.name}</h3>
               <p className="text-sm text-gray-600 mb-2">{color.hex.toUpperCase()}</p>
               <p className="text-xs text-gray-500 mb-2">{color.usage}</p>
               <code className="text-xs bg-gray-100 px-2 py-1 rounded">{color.className}</code>
@@ -139,13 +140,13 @@ function ColorsSection() {
 function TypographySection() {
   return (
     <div>
-      <h2 className="text-3xl font-bold text-black mb-6">Typography Scale</h2>
+      <h2 className="text-3xl font-bold text-blue-600 mb-6">Typography Scale</h2>
       
       <div className="space-y-8">
         {/* Logo Typography */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-black mb-4">Brand Typography</h3>
-          <div className="text-2xl font-semibold text-black mb-2">
+          <h3 className="text-lg font-semibold text-blue-600 mb-4">Brand Typography</h3>
+          <div className="text-2xl font-semibold text-blue-600 mb-2">
             Fontshare<span className="text-xs align-super ml-0.5">™</span>
           </div>
           <p className="text-sm text-gray-600">Logo: font-semibold, 24px</p>
@@ -153,14 +154,14 @@ function TypographySection() {
 
         {/* Display Typography */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-black mb-4">Display Typography</h3>
+          <h3 className="text-lg font-semibold text-blue-600 mb-4">Display Typography</h3>
           <div className="space-y-4">
             <div>
-              <div className="text-6xl font-bold text-black mb-2">100</div>
+              <div className="text-6xl font-bold text-blue-600 mb-2">100</div>
               <p className="text-sm text-gray-600">Display Large: font-bold, 60px</p>
             </div>
             <div>
-              <div className="text-4xl font-bold text-black mb-2">Display Heading</div>
+              <div className="text-4xl font-bold text-blue-600 mb-2">Display Heading</div>
               <p className="text-sm text-gray-600">Display Medium: font-bold, 36px</p>
             </div>
           </div>
@@ -168,26 +169,26 @@ function TypographySection() {
 
         {/* Content Typography */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-black mb-4">Content Typography</h3>
+          <h3 className="text-lg font-semibold text-blue-600 mb-4">Content Typography</h3>
           <div className="space-y-4">
             <div>
-              <h1 className="text-3xl font-bold text-black mb-2">Heading 1</h1>
+              <h1 className="text-3xl font-bold text-blue-600 mb-2">Heading 1</h1>
               <p className="text-sm text-gray-600">H1: font-bold, 30px</p>
             </div>
             <div>
-              <h2 className="text-2xl font-semibold text-black mb-2">Heading 2</h2>
+              <h2 className="text-2xl font-semibold text-blue-600 mb-2">Heading 2</h2>
               <p className="text-sm text-gray-600">H2: font-semibold, 24px</p>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-black mb-2">Heading 3</h3>
+              <h3 className="text-lg font-semibold text-blue-600 mb-2">Heading 3</h3>
               <p className="text-sm text-gray-600">H3: font-semibold, 18px</p>
             </div>
             <div>
-              <p className="text-base text-black mb-2">Body Text - Regular paragraph content for reading and general information.</p>
+              <p className="text-base text-blue-600 mb-2">Body Text - Regular paragraph content for reading and general information.</p>
               <p className="text-sm text-gray-600">Body: font-normal, 16px</p>
             </div>
             <div>
-              <p className="text-sm text-black mb-2">Small Text - Labels, captions, and secondary information.</p>
+              <p className="text-sm text-blue-600 mb-2">Small Text - Labels, captions, and secondary information.</p>
               <p className="text-sm text-gray-600">Small: font-medium, 14px</p>
             </div>
             <div>
@@ -199,9 +200,9 @@ function TypographySection() {
 
         {/* Font Preview Typography */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-black mb-4">Font Preview Typography</h3>
+          <h3 className="text-lg font-semibold text-blue-600 mb-4">Font Preview Typography</h3>
           <div 
-            className="font-black text-black leading-none tracking-tight mb-2" 
+            className="font-black text-blue-600 leading-none tracking-tight mb-2" 
             style={{ 
               fontSize: '60px', 
               lineHeight: '0.8',
@@ -224,26 +225,26 @@ function ComponentsSection() {
 
   return (
     <div>
-      <h2 className="text-3xl font-bold text-black mb-6">UI Components</h2>
+      <h2 className="text-3xl font-bold text-blue-600 mb-6">UI Components</h2>
       
       <div className="space-y-8">
         {/* Navigation Components */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-black mb-4">Navigation</h3>
+          <h3 className="text-lg font-semibold text-blue-600 mb-4">Navigation</h3>
           
           {/* Main Navigation */}
           <div className="mb-6">
             <p className="text-sm text-gray-600 mb-3">Primary Navigation</p>
             <nav className="flex items-center" style={{ backgroundColor: '#e8e3d5' }}>
-              <div className="bg-black text-white px-8 py-4 flex flex-col items-center text-sm font-medium">
+              <div className="bg-blue-600 text-white px-8 py-4 flex flex-col items-center text-sm font-medium">
                 <span className="mb-1">Fonts</span>
                 <span className="text-xs">100</span>
               </div>
-              <div className="px-8 py-4 text-sm font-medium text-black cursor-pointer flex flex-col items-center hover:bg-black/5">
+              <div className="px-8 py-4 text-sm font-medium text-blue-600 cursor-pointer flex flex-col items-center hover:bg-blue-600/5">
                 <span className="mb-1">Pairs</span>
                 <span className="text-xs text-gray-600">59</span>
               </div>
-              <div className="px-8 py-4 text-sm font-medium text-black cursor-pointer hover:bg-black/5">
+              <div className="px-8 py-4 text-sm font-medium text-blue-600 cursor-pointer hover:bg-blue-600/5">
                 Licenses
               </div>
             </nav>
@@ -253,9 +254,9 @@ function ComponentsSection() {
           <div className="mb-6">
             <p className="text-sm text-gray-600 mb-3">Tab Navigation</p>
             <div className="flex items-center space-x-6">
-              <button className="text-sm font-medium text-gray-400 hover:text-black">Cities</button>
-              <button className="text-sm font-medium text-black border-b-2 border-black pb-1">Excerpts</button>
-              <button className="text-sm font-medium text-gray-400 hover:text-black">Names</button>
+              <button className="text-sm font-medium text-gray-400 hover:text-blue-600">Cities</button>
+              <button className="text-sm font-medium text-blue-600 border-b-2 border-blue-600 pb-1">Excerpts</button>
+              <button className="text-sm font-medium text-gray-400 hover:text-blue-600">Names</button>
             </div>
           </div>
 
@@ -263,25 +264,23 @@ function ComponentsSection() {
           <div>
             <p className="text-sm text-gray-600 mb-3">Menu Icon</p>
             <div className="flex flex-col space-y-1.5 cursor-pointer w-fit p-2">
-              <div className="w-7 h-0.5 bg-black"></div>
-              <div className="w-7 h-0.5 bg-black"></div>
-              <div className="w-7 h-0.5 bg-black"></div>
+              <div className="w-7 h-0.5 bg-blue-600"></div>
+              <div className="w-7 h-0.5 bg-blue-600"></div>
+              <div className="w-7 h-0.5 bg-blue-600"></div>
             </div>
           </div>
         </div>
 
         {/* Input Components */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-black mb-4">Form Controls</h3>
+          <h3 className="text-lg font-semibold text-blue-600 mb-4">Form Controls</h3>
           
           <div className="space-y-6">
             {/* Search Input */}
             <div>
               <p className="text-sm text-gray-600 mb-3">Search Input</p>
               <div className="flex items-center space-x-3 bg-white px-4 py-2 border border-gray-300 w-fit">
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+                <MagnifyingGlassIcon className="w-4 h-4 text-gray-400" />
                 <input 
                   type="text" 
                   placeholder="Search" 
@@ -295,11 +294,9 @@ function ComponentsSection() {
             {/* Dropdown */}
             <div>
               <p className="text-sm text-gray-600 mb-3">Dropdown Button</p>
-              <button className="flex items-center space-x-2 bg-white px-4 py-2 border border-gray-300 text-sm font-medium text-black hover:bg-gray-50">
+              <button className="flex items-center space-x-2 bg-white px-4 py-2 border border-gray-300 text-sm font-medium text-blue-600 hover:bg-gray-50">
                 <span>Categories</span>
-                <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
-                </svg>
+                <ChevronDownIcon className="w-4 h-4 text-gray-500" />
               </button>
             </div>
 
@@ -323,17 +320,17 @@ function ComponentsSection() {
 
         {/* Button Components */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-black mb-4">Buttons</h3>
+          <h3 className="text-lg font-semibold text-blue-600 mb-4">Buttons</h3>
           
           <div className="space-y-4">
             <div className="flex items-center space-x-4">
-              <button className="bg-black text-white px-6 py-3 text-sm font-medium hover:bg-gray-900 transition-colors">
+              <button className="bg-blue-600 text-white px-6 py-3 text-sm font-medium hover:bg-gray-900 transition-colors">
                 Primary Button
               </button>
-              <button className="bg-white border border-gray-300 text-black px-6 py-3 text-sm font-medium hover:bg-gray-50 transition-colors">
+              <button className="bg-white border border-gray-300 text-blue-600 px-6 py-3 text-sm font-medium hover:bg-gray-50 transition-colors">
                 Secondary Button
               </button>
-              <button className="text-black text-sm font-medium hover:underline">
+              <button className="text-blue-600 text-sm font-medium hover:underline">
                 Text Button
               </button>
             </div>
@@ -342,14 +339,14 @@ function ComponentsSection() {
 
         {/* Status Indicators */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-black mb-4">Status Indicators</h3>
+          <h3 className="text-lg font-semibold text-blue-600 mb-4">Status Indicators</h3>
           
           <div className="space-y-4">
             <div>
               <p className="text-sm text-gray-600 mb-3">Status Dots</p>
               <div className="flex items-center space-x-2">
                 <div className="w-4 h-4 border border-gray-300 rounded-full bg-green-400"></div>
-                <div className="w-4 h-4 border border-gray-300 rounded-full bg-black"></div>
+                <div className="w-4 h-4 border border-gray-300 rounded-full bg-blue-600"></div>
                 <div className="w-4 h-4 border border-gray-300 rounded-full bg-gray-300"></div>
               </div>
             </div>
@@ -363,12 +360,12 @@ function ComponentsSection() {
 function LayoutSection() {
   return (
     <div>
-      <h2 className="text-3xl font-bold text-black mb-6">Layout & Spacing</h2>
+      <h2 className="text-3xl font-bold text-blue-600 mb-6">Layout & Spacing</h2>
       
       <div className="space-y-8">
         {/* Spacing Scale */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-black mb-4">Spacing Scale</h3>
+          <h3 className="text-lg font-semibold text-blue-600 mb-4">Spacing Scale</h3>
           <div className="space-y-4">
             {[
               { name: 'XS', value: '4px', className: 'p-1' },
@@ -382,7 +379,7 @@ function LayoutSection() {
                 <span className="w-12 text-sm font-medium">{space.name}</span>
                 <span className="w-16 text-sm text-gray-600">{space.value}</span>
                 <div className="bg-gray-100">
-                  <div className={`bg-black ${space.className}`}></div>
+                  <div className={`bg-blue-600 ${space.className}`}></div>
                 </div>
                 <code className="text-xs bg-gray-100 px-2 py-1 rounded">{space.className}</code>
               </div>
@@ -392,7 +389,7 @@ function LayoutSection() {
 
         {/* Grid System */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-black mb-4">Grid System</h3>
+          <h3 className="text-lg font-semibold text-blue-600 mb-4">Grid System</h3>
           <div className="grid grid-cols-12 gap-4">
             {Array.from({ length: 12 }).map((_, i) => (
               <div key={i} className="bg-gray-100 h-8 flex items-center justify-center text-xs">
@@ -405,7 +402,7 @@ function LayoutSection() {
 
         {/* Container Widths */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-black mb-4">Container Widths</h3>
+          <h3 className="text-lg font-semibold text-blue-600 mb-4">Container Widths</h3>
           <div className="space-y-4">
             {[
               { name: 'Mobile', width: '100%', maxWidth: '640px' },
@@ -431,16 +428,16 @@ function LayoutSection() {
 function PatternsSection() {
   return (
     <div>
-      <h2 className="text-3xl font-bold text-black mb-6">Design Patterns</h2>
+      <h2 className="text-3xl font-bold text-blue-600 mb-6">Design Patterns</h2>
       
       <div className="space-y-8">
         {/* Card Pattern */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-black mb-4">Font Card Pattern</h3>
+          <h3 className="text-lg font-semibold text-blue-600 mb-4">Font Card Pattern</h3>
           <div className="border-b border-gray-300 py-8 px-4" style={{ backgroundColor: '#e8e3d5' }}>
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center space-x-3">
-                <h2 className="text-lg font-medium text-black">Satoshi</h2>
+                <h2 className="text-lg font-medium text-blue-600">Satoshi</h2>
                 <svg className="w-5 h-5 text-gray-300 cursor-pointer hover:text-red-400" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
                 </svg>
@@ -453,7 +450,7 @@ function PatternsSection() {
             </div>
             <div className="mb-6">
               <div 
-                className="font-black text-black leading-none tracking-tight" 
+                className="font-black text-blue-600 leading-none tracking-tight" 
                 style={{ 
                   fontSize: '60px', 
                   lineHeight: '0.8',
@@ -472,20 +469,16 @@ function PatternsSection() {
 
         {/* Filter Pattern */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-black mb-4">Filter Control Pattern</h3>
+          <h3 className="text-lg font-semibold text-blue-600 mb-4">Filter Control Pattern</h3>
           <div className="space-y-4" style={{ backgroundColor: '#e8e3d5', padding: '24px' }}>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-3 bg-white px-4 py-2 border border-gray-300">
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+                <MagnifyingGlassIcon className="w-4 h-4 text-gray-400" />
                 <input type="text" placeholder="Search" className="bg-transparent border-none outline-none text-sm placeholder-gray-400 w-32" />
               </div>
-              <button className="flex items-center space-x-2 bg-white px-4 py-2 border border-gray-300 text-sm font-medium text-black hover:bg-gray-50">
+              <button className="flex items-center space-x-2 bg-white px-4 py-2 border border-gray-300 text-sm font-medium text-blue-600 hover:bg-gray-50">
                 <span>Categories</span>
-                <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
-                </svg>
+                <ChevronDownIcon className="w-4 h-4 text-gray-500" />
               </button>
             </div>
           </div>
@@ -493,10 +486,10 @@ function PatternsSection() {
 
         {/* Usage Guidelines */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-black mb-4">Usage Guidelines</h3>
+          <h3 className="text-lg font-semibold text-blue-600 mb-4">Usage Guidelines</h3>
           <div className="space-y-4 text-sm">
             <div>
-              <h4 className="font-medium text-black mb-2">Color Usage</h4>
+              <h4 className="font-medium text-blue-600 mb-2">Color Usage</h4>
               <ul className="text-gray-600 space-y-1 ml-4">
                 <li>• Use cream background (#e8e3d5) for main interface areas</li>
                 <li>• Black should be used sparingly for high contrast elements</li>
@@ -505,7 +498,7 @@ function PatternsSection() {
               </ul>
             </div>
             <div>
-              <h4 className="font-medium text-black mb-2">Typography</h4>
+              <h4 className="font-medium text-blue-600 mb-2">Typography</h4>
               <ul className="text-gray-600 space-y-1 ml-4">
                 <li>• Use font-black (900) only for large font previews</li>
                 <li>• Maintain consistent line-height: 0.8 for displays, 1.5 for body</li>
@@ -513,7 +506,7 @@ function PatternsSection() {
               </ul>
             </div>
             <div>
-              <h4 className="font-medium text-black mb-2">Spacing</h4>
+              <h4 className="font-medium text-blue-600 mb-2">Spacing</h4>
               <ul className="text-gray-600 space-y-1 ml-4">
                 <li>• Use 8px grid system for consistent spacing</li>
                 <li>• Cards should have 32px padding for comfortable reading</li>

@@ -90,7 +90,7 @@ if %errorlevel% equ 0 (
 :: Start Frontend
 call :print_status "Starting Next.js Frontend..."
 cd frontend
-start /b bun run dev
+start /b bun run dev -- --port 3001
 cd ..
 
 :: Wait for frontend to start
@@ -100,7 +100,7 @@ timeout /t 5 /nobreak >nul
 tasklist /fi "imagename eq node.exe" >nul 2>&1
 if %errorlevel% equ 0 (
     call :print_success "Frontend started successfully"
-    call :print_status "Frontend running at: http://localhost:3000"
+    call :print_status "Frontend running at: http://localhost:3001"
 ) else (
     call :print_error "Failed to start frontend"
     goto cleanup
@@ -110,7 +110,7 @@ echo =================================
 call :print_success "All services started successfully!"
 echo.
 call :print_status "🚀 Application URLs:"
-call :print_status "   Frontend: http://localhost:3000"
+call :print_status "   Frontend: http://localhost:3001"
 call :print_status "   Backend API: http://localhost:8000"
 call :print_status "   API Docs: http://localhost:8000/docs"
 echo.
