@@ -80,12 +80,19 @@ export default function UploadConfirmModal({
         }`}>
           <button
             onClick={onClose}
-            className={`px-6 py-3 rounded-2xl transition-all duration-200 shadow-lg ${
-              isDarkMode 
-                ? 'bg-white/10 hover:bg-white/20 text-zinc-200 border border-white/20 shadow-white/10' 
-                : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200 shadow-black/10'
-            }`}
-            style={{ fontWeight: FONT_STYLES.fontWeight.medium }}
+            className="px-6 py-3 rounded-2xl transition-all duration-200 shadow-lg border"
+            style={{
+              backgroundColor: 'var(--bg-secondary)',
+              color: 'var(--text-secondary)',
+              borderColor: 'var(--border-color)',
+              fontWeight: FONT_STYLES.fontWeight.medium
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--bg-tertiary)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--bg-secondary)';
+            }}
           >
             Cancel
           </button>

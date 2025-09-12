@@ -1,7 +1,20 @@
 "use client";
 
 import React from "react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import { 
+  XMarkIcon, 
+  DocumentTextIcon, 
+  BoltIcon, 
+  CheckIcon, 
+  CommandLineIcon, 
+  BookOpenIcon, 
+  RocketLaunchIcon, 
+  LightBulbIcon, 
+  SparklesIcon, 
+  ViewfinderCircleIcon, 
+  DevicePhoneMobileIcon, 
+  MoonIcon 
+} from "@heroicons/react/24/outline";
 import { FONT_STYLES } from "@/constants/theme";
 
 interface HelpModalProps {
@@ -32,8 +45,9 @@ export default function HelpModal({ isOpen, onClose, isDarkMode }: HelpModalProp
             ? 'border-white/20 bg-zinc-900/90' 
             : 'border-amber-200/50 bg-white/90'
         }`}>
-          <h2 className="text-2xl font-medium" style={{ fontWeight: FONT_STYLES.fontWeight.medium }}>
-            📝 Markdown Canvas Guide
+          <h2 className="text-2xl font-medium flex items-center gap-2" style={{ fontWeight: FONT_STYLES.fontWeight.medium }}>
+            <DocumentTextIcon className="h-6 w-6" />
+            Markdown Canvas Guide
           </h2>
           <button
             onClick={onClose}
@@ -81,7 +95,8 @@ function HowItWorksSection({ isDarkMode }: { isDarkMode: boolean }) {
   return (
     <section>
       <h3 className="text-xl mb-4 flex items-center gap-2" style={{ fontWeight: FONT_STYLES.fontWeight.medium }}>
-        ⚡ How the Canvas Works
+        <BoltIcon className="h-5 w-5" />
+        How the Canvas Works
       </h3>
       <div className="space-y-3 text-sm">
         <p className={isDarkMode ? 'text-zinc-200' : 'text-gray-900'}>
@@ -89,19 +104,19 @@ function HowItWorksSection({ isDarkMode }: { isDarkMode: boolean }) {
         </p>
         <ul className="space-y-2 ml-4">
           <li className="flex items-start gap-2">
-            <span className="text-green-500 mt-1">✓</span>
+            <CheckIcon className="h-4 w-4 text-green-500 mt-1" />
             <span><strong>Edit Mode:</strong> Type or paste Markdown - shows as plain text</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-blue-500 mt-1">✓</span>
+            <CheckIcon className="h-4 w-4 text-blue-500 mt-1" />
             <span><strong>Preview Mode:</strong> Shows beautifully rendered Markdown with formatting</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-purple-500 mt-1">✓</span>
+            <CheckIcon className="h-4 w-4 text-purple-500 mt-1" />
             <span><strong>Auto-Switch:</strong> Automatically switches to preview 1.5 seconds after you stop typing</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-orange-500 mt-1">✓</span>
+            <CheckIcon className="h-4 w-4 text-orange-500 mt-1" />
             <span><strong>Click to Edit:</strong> Click anywhere in preview mode to edit again</span>
           </li>
         </ul>
@@ -121,7 +136,8 @@ function KeyboardShortcutsSection({ isDarkMode }: { isDarkMode: boolean }) {
   return (
     <section>
       <h3 className="text-xl mb-4 flex items-center gap-2" style={{ fontWeight: FONT_STYLES.fontWeight.medium }}>
-        ⌨️ Keyboard Shortcuts
+        <CommandLineIcon className="h-5 w-5" />
+        Keyboard Shortcuts
       </h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {shortcuts.map((shortcut, index) => (
@@ -174,7 +190,8 @@ function MarkdownSyntaxSection({ isDarkMode }: { isDarkMode: boolean }) {
   return (
     <section>
       <h3 className="text-xl mb-4 flex items-center gap-2" style={{ fontWeight: FONT_STYLES.fontWeight.medium }}>
-        📚 Markdown Syntax Guide
+        <BookOpenIcon className="h-5 w-5" />
+        Markdown Syntax Guide
       </h3>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {syntaxItems.map((item, index) => (
@@ -201,16 +218,17 @@ function MarkdownSyntaxSection({ isDarkMode }: { isDarkMode: boolean }) {
 
 function AdvancedFeaturesSection({ isDarkMode }: { isDarkMode: boolean }) {
   const features = [
-    { icon: '✨', title: 'Smart Paste', description: 'Paste large Markdown content and it automatically switches to preview mode for instant visualization.' },
-    { icon: '🎯', title: 'Syntax Highlighting', description: 'Code blocks automatically get syntax highlighting for better readability.' },
-    { icon: '📱', title: 'Responsive Design', description: 'Works perfectly on both desktop and mobile devices with proper text wrapping.' },
-    { icon: '🌙', title: 'Theme Support', description: 'Automatically adapts to light and dark themes for comfortable viewing.' },
+    { icon: SparklesIcon, title: 'Smart Paste', description: 'Paste large Markdown content and it automatically switches to preview mode for instant visualization.' },
+    { icon: ViewfinderCircleIcon, title: 'Syntax Highlighting', description: 'Code blocks automatically get syntax highlighting for better readability.' },
+    { icon: DevicePhoneMobileIcon, title: 'Responsive Design', description: 'Works perfectly on both desktop and mobile devices with proper text wrapping.' },
+    { icon: MoonIcon, title: 'Theme Support', description: 'Automatically adapts to light and dark themes for comfortable viewing.' },
   ];
 
   return (
     <section>
       <h3 className="text-xl mb-4 flex items-center gap-2" style={{ fontWeight: FONT_STYLES.fontWeight.medium }}>
-        🚀 Advanced Features
+        <RocketLaunchIcon className="h-5 w-5" />
+        Advanced Features
       </h3>
       <div className="space-y-4">
         {features.map((feature, index) => (
@@ -219,8 +237,9 @@ function AdvancedFeaturesSection({ isDarkMode }: { isDarkMode: boolean }) {
               ? 'bg-white/[0.03] border-white/10' 
               : 'bg-[#FFF8F0] border-amber-200/50'
           }`}>
-            <h4 className="mb-2" style={{ fontWeight: FONT_STYLES.fontWeight.medium }}>
-              {feature.icon} {feature.title}
+            <h4 className="mb-2 flex items-center gap-2" style={{ fontWeight: FONT_STYLES.fontWeight.medium }}>
+              <feature.icon className="h-4 w-4" />
+              {feature.title}
             </h4>
             <p className={`text-sm ${
               isDarkMode ? 'text-zinc-400/80' : 'text-gray-600'
@@ -243,7 +262,8 @@ function TipsSection({ isDarkMode }: { isDarkMode: boolean }) {
   return (
     <section>
       <h3 className="text-xl mb-4 flex items-center gap-2" style={{ fontWeight: FONT_STYLES.fontWeight.medium }}>
-        💡 Tips & Tricks
+        <LightBulbIcon className="h-5 w-5" />
+        Tips & Tricks
       </h3>
       <div className="space-y-3">
         {tips.map((tip, index) => (

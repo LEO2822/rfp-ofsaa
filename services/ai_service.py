@@ -3,15 +3,21 @@ import json
 import asyncio
 from openai import OpenAI
 from dotenv import load_dotenv
+from loguru import logger
 
 load_dotenv()
 
 class OpenRouterService:
     def __init__(self):
+        api_key = os.getenv("OPENROUTER_API_KEY")
+        if not api_key:
+            logger.warning("OPENROUTER_API_KEY not found in environment variables")
+        
         self.client = OpenAI(
-            api_key=os.getenv("OPENROUTER_API_KEY"),
+            api_key=api_key,
             base_url="https://openrouter.ai/api/v1"
         )
+        logger.info("OpenRouterService initialized")
         self.system_prompt = """You are a helpful AI assistant that provides well-formatted responses based on selected text context.
 
 CRITICAL RULES:
@@ -62,8 +68,10 @@ RESPONSE GUIDELINES:
 
     async def generate_chat_stream(self, query: str, context: str = "", canvas_content: str = ""):
         try:
+            logger.debug(f"Generating chat stream - Query: {len(query)} chars, Context: {len(context)} chars")
             user_prompt = self._construct_user_prompt(query, context, canvas_content)
             
+            logger.info("Creating OpenAI streaming completion with gpt-4o-mini")
             stream = self.client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=[
@@ -82,7 +90,10 @@ RESPONSE GUIDELINES:
                     await asyncio.sleep(0.01)
             
             yield "data: [DONE]\n\n"
+            logger.info("Chat stream completed successfully")
         except Exception as e:
+            logger.error(f"Error in chat stream generation: {str(e)}")
+            logger.exception("Chat stream generation error")
             error_msg = str(e)
             if "API key" in error_msg.lower():
                 error_msg = "Invalid OpenRouter API key. Please check your configuration."
